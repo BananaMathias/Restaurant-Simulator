@@ -3,7 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Waiter {
+public class Waiter implements Subscriber{
     private static final long PERIOD = 6230; //one lap
     private final long lastTime = System.currentTimeMillis();;
     private int x;
@@ -32,8 +32,8 @@ public class Waiter {
         return this.diameter;
     }
 
-    public void recieveOrder(){
-        walk();
+    public void recieveOrder(int x, int y){
+        walkToTable(x, y);
 
 
     }
@@ -41,7 +41,30 @@ public class Waiter {
     private void deliverOrder(){
 
     }
-    private int walk(){
+    private void walkToTable(int x, int y){
+        goTo(x, (y-50));
+    }
+    private int goTo(int x, int y){
+// Move in Y direction
+        if (this.y != y) {
+            int step = Math.min(5, Math.abs(y - this.y)); // Choose the smaller step
+            this.y += (y > this.y) ? step : -step;
+        }
+
+        // Move in X direction
+        if (this.x != x) {
+            int step = Math.min(5, Math.abs(x - this.x)); // Choose the smaller step
+            this.x += (x > this.x) ? step : -step;
+        }
+
+        // If both x and y match the target, return 1
+        if (this.x == x && this.y == y) {
+            return 1; // Reached destination
+        }
+
+        return -1; // Still moving
+
+        /*
         long thisTime = System.currentTimeMillis(); //takes new time every update in RestaurantMain
         if ((thisTime - lastTime) >= PERIOD) { // if the difference between when the object was created and the current time is == PERIOD, returns -1 all the time
             return -1;
@@ -60,6 +83,10 @@ public class Waiter {
             }
         }
         return 0;
+*/
+    }
+
+    private void walkHome(){
 
     }
     public void update(){

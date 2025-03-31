@@ -11,14 +11,20 @@ public class RestaurantMain extends JPanel {
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
-        for (int i = 0; i < 3; i++){
+        /*for (int i = 0; i < 3; i++){
            tables.add(new Table((515 + i*260), 50, 50, i));
         }
         for (int i = 3; i < 6; i++){
             tables.add(new Table((i*260 - 270), 500, 50, i));
-        }
-
+        }*/
+        tables.add(new Table(700,50,50,1));
         waiters.add(new Waiter(507,300,40,tables));
+
+        for (Waiter w: waiters){
+            for (Table t: tables){
+                t.subscribe(w);
+            }
+        }
 
     }
 
@@ -27,10 +33,10 @@ public class RestaurantMain extends JPanel {
 
         // what should happen with the waiter each time the simulation loops
         for (Waiter w : waiters) {
-            w.recieveOrder();
+
         }
         for (Table t: tables){
-            System.out.println(t.getNumber());
+            t.order();
         }
         // ... similar updates for all other agents in the simulation.
     }
