@@ -37,26 +37,27 @@ public class RestaurantMain extends JPanel {
 
         // what should happen with the waiter each time the simulation loops
         for (Waiter w : waiters) {
-            /*if (w.isIdle()) {
+            w.update();
+
+            if (w.isIdle()) {
                 Random randomTable = new Random();
                 int tableNumber = randomTable.nextInt(5);
-                tables.get(tableNumber).order();
-                System.out.println(2);*/
-
-
+                tables.get(tableNumber).order(tableNumber);
 
             }
+        }
 
         for (Table t: tables){
 
         }
         // ... similar updates for all other agents in the simulation.
     }
+
     static void updateTableOrder(){
         Random randomTable = new Random();
         int tableNumber = randomTable.nextInt(5);
 
-        tables.get(tableNumber).order();
+        tables.get(tableNumber).order(tableNumber);
 
         /*long thisTime = System.currentTimeMillis(); //takes new time every update in RestaurantMain
         if ((thisTime - lastTime) >= PERIOD) { // if the difference between when the object was created and the current time is == PERIOD, returns -1 all the time

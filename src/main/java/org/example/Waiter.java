@@ -1,5 +1,6 @@
 package org.example;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +24,10 @@ public class Waiter implements Subscriber{
         this.y = y;
         this.diameter = diameter;
         this.tables = tables;
+
+        this.appetizerOrder = new HashMap<>();
+        this.mainCourseOrder = new HashMap<>();
+        this.dessertOrder = new HashMap<>();
     }
     public int getX() {
         return this.x;
@@ -36,31 +41,37 @@ public class Waiter implements Subscriber{
         return this.diameter;
     }
 
-    public void recieveOrder(int x, int y){
+    public void recieveOrder(int x, int y, int tableNumber, String appetizer, String mainCourse, String dessert){
 
-            //long thisTime = System.currentTimeMillis(); //takes new time every update in RestaurantMain
-            //if ((thisTime - lastTime) >= PERIOD) { // if the difference between when the object was created and the current time is == PERIOD, returns -1 all the time
-                //state = States.GOING_HOME;
-                //walkHome();
+            appetizerOrder.put(tableNumber, appetizer);
+            mainCourseOrder.put(tableNumber, mainCourse);
+            dessertOrder.put(tableNumber, dessert);
+
             if (isIdle()){
                 state = States.GOING_TO_TABLE;
                 targetX = x;
                 targetY = y;
             }
 
-
     }
 
     private void walkToTable(){
         if (isGoingToTable()){
-            if (goTo(targetX, targetY)){
-                System.out.println(1);
+            if (goTo()) {
+                state = States.TAKING_ORDER;
+                try {
+                    Thread.sleep(2000); // Take order for 2 seconds
+                } catch (Exception threadException) {
+                    System.out.println("Sleep exception: " + threadException.getMessage());
+                }
+                state = States.GOING_HOME;
+                System.out.println("Going home");
             }
 
 
         }
     }
-    private boolean goTo(int x, int y){
+    private boolean goTo(){
         boolean xArrived = false;
         boolean yArrived = false;
 
@@ -81,7 +92,6 @@ public class Waiter implements Subscriber{
             yArrived = true;
         }
 
-
         return xArrived && yArrived;
     }
 
@@ -89,26 +99,34 @@ public class Waiter implements Subscriber{
         switch (state){
             case GOING_TO_TABLE:
                 walkToTable();
+                break;
 
             case GOING_HOME:
                 walkHome();
+                break;
 
-            default: {}
+            default:
+                break;
         }
 
     }
     private void walkHome(){
-        if (state == States.GOING_HOME) {
-            goTo(507, 300);
+        targetX = 507;
+        targetY = 300;
+        if (isGoingHome()) {
+            if (goTo()){
+                try{
+                    Thread.sleep(2000);
+                }
+                catch (Exception threadException) {
+                    System.out.println("Sleep exception: " + threadException.getMessage());
+                }
+
+                state = States.IDLE;
+                System.out.println("Is now home");
+            }
         }
 
-
-    }
-
-
-
-    public States getState(){
-        return state;
     }
 
     public boolean isIdle(){
@@ -129,6 +147,15 @@ public class Waiter implements Subscriber{
         }
     }
 
+    public boolean isGoingHome(){
+        if (state == States.GOING_HOME){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
 
+// Have to make targetX and Y better implemented
 }

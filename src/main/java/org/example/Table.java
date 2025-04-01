@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Table {
 
@@ -9,6 +10,9 @@ public class Table {
     private final int diameter;
     private final int number;
     private ArrayList<Subscriber> subscribers;
+    private ArrayList<String> appetizers;
+    private ArrayList<String> mainCourses;
+    private ArrayList<String> desserts;
 
     public Table(int x, int y, int diameter, int number){
         this.x = x;
@@ -16,7 +20,20 @@ public class Table {
         this.diameter = diameter;
         this.number = number;
         this.subscribers = new ArrayList<Subscriber>();
+        this.appetizers = new ArrayList<>();
+        this.appetizers.add("Mushrooms");
+        this.appetizers.add("Eggs");
+        this.appetizers.add("Pickles");
 
+        this.mainCourses = new ArrayList<>();
+        this.mainCourses.add("Spaghetti carbonara");
+        this.mainCourses.add("Meatballs");
+        this.mainCourses.add("Joel");
+
+        this.desserts = new ArrayList<>();
+        this.desserts.add("Mathias");
+        this.desserts.add("Chocolate");
+        this.desserts.add("Ice cream");
 
     }
 
@@ -28,10 +45,18 @@ public class Table {
         subscribers.remove(subscriber);
     }
 
-    public void order(){
+    public void order(int tableNumber){
         for (Subscriber s: subscribers){
-            s.recieveOrder(getX(), getY());
-            System.out.println(3);
+            Random appetizerRandom = new Random();
+            int appetizerInt = appetizerRandom.nextInt(2);
+
+            Random mainCourseRandom = new Random();
+            int mainCourseInt = mainCourseRandom.nextInt(2);
+
+            Random dessertRandom = new Random();
+            int dessertInt = dessertRandom.nextInt(2);
+
+            s.recieveOrder(getX(), getY(), tableNumber, appetizers.get(appetizerInt), mainCourses.get(mainCourseInt), desserts.get(dessertInt));
         }
     }
     public int getX() {
