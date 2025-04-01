@@ -31,6 +31,7 @@ public class Table {
     public void order(){
         for (Subscriber s: subscribers){
             s.recieveOrder(getX(), getY());
+            System.out.println(3);
         }
     }
     public int getX() {

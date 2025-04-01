@@ -2,22 +2,25 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RestaurantMain extends JPanel {
 
     static ArrayList<Waiter> waiters = new ArrayList<Waiter>();
     static ArrayList<Table> tables = new ArrayList<Table>();
+    private static final long PERIOD = 111000; //one lap
+    private static long lastTime = System.currentTimeMillis();
 
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
-        /*for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++){
            tables.add(new Table((515 + i*260), 50, 50, i));
         }
-        for (int i = 3; i < 6; i++){
-            tables.add(new Table((i*260 - 270), 500, 50, i));
-        }*/
-        tables.add(new Table(700,50,50,1));
+        for (int i = 3; i < 6; i++) {
+            tables.add(new Table((i * 260 - 270), 500, 50, i));
+        }
+        //tables.add(new Table(1000,500,50,1));
         waiters.add(new Waiter(507,300,40,tables));
 
         for (Waiter w: waiters){
@@ -26,6 +29,7 @@ public class RestaurantMain extends JPanel {
             }
         }
 
+
     }
 
     // Contains the simulation logic, should probably be broken into smaller pieces as the program expands
@@ -33,14 +37,35 @@ public class RestaurantMain extends JPanel {
 
         // what should happen with the waiter each time the simulation loops
         for (Waiter w : waiters) {
+            /*if (w.isIdle()) {
+                Random randomTable = new Random();
+                int tableNumber = randomTable.nextInt(5);
+                tables.get(tableNumber).order();
+                System.out.println(2);*/
 
-        }
+
+
+            }
+
         for (Table t: tables){
-            t.order();
+
         }
         // ... similar updates for all other agents in the simulation.
     }
+    static void updateTableOrder(){
+        Random randomTable = new Random();
+        int tableNumber = randomTable.nextInt(5);
 
+        tables.get(tableNumber).order();
+
+        /*long thisTime = System.currentTimeMillis(); //takes new time every update in RestaurantMain
+        if ((thisTime - lastTime) >= PERIOD) { // if the difference between when the object was created and the current time is == PERIOD, returns -1 all the time
+            return -1;
+        }
+        else {
+        }
+        return 0;*/
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -111,6 +136,7 @@ public class RestaurantMain extends JPanel {
                 System.out.println("Sleep exception: " + threadException.getMessage());
             }
             update();
+
             panel.repaint();
         }
     }
