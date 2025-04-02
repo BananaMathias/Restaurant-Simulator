@@ -8,9 +8,8 @@ public class RestaurantMain extends JPanel {
 
     static ArrayList<Waiter> waiters = new ArrayList<Waiter>();
     static ArrayList<Table> tables = new ArrayList<Table>();
-    private static final long PERIOD = 111000; //one lap
-    private static long lastTime = System.currentTimeMillis();
-
+    private static double[] visits = {0, 0, 0, 0, 0, 0};
+    private static double totalVisits = 0;
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
@@ -42,7 +41,17 @@ public class RestaurantMain extends JPanel {
             if (w.isIdle()) {
                 Random randomTable = new Random();
                 int tableNumber = randomTable.nextInt(5);
-                tables.get(tableNumber).order(tableNumber);
+                if (totalVisits == 0){
+                    randomOrder(tableNumber);
+                }
+
+                else if (visits[tableNumber]/totalVisits <= (0.17)){
+                    randomOrder(tableNumber);
+                    toString(visits);
+                    System.out.println(totalVisits);
+
+                }
+
 
             }
         }
@@ -53,20 +62,12 @@ public class RestaurantMain extends JPanel {
         // ... similar updates for all other agents in the simulation.
     }
 
-    static void updateTableOrder(){
-        Random randomTable = new Random();
-        int tableNumber = randomTable.nextInt(5);
-
+    static void randomOrder(int tableNumber){
         tables.get(tableNumber).order(tableNumber);
-
-        /*long thisTime = System.currentTimeMillis(); //takes new time every update in RestaurantMain
-        if ((thisTime - lastTime) >= PERIOD) { // if the difference between when the object was created and the current time is == PERIOD, returns -1 all the time
-            return -1;
-        }
-        else {
-        }
-        return 0;*/
+        visits[tableNumber]++;
+        totalVisits++;
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -140,5 +141,13 @@ public class RestaurantMain extends JPanel {
 
             panel.repaint();
         }
+    }
+
+    public static void toString(double[] list) {
+        System.out.print("[");
+        for (double element : list) {
+            System.out.print(element + ", ");
+        }
+        System.out.print("]");
     }
 }
