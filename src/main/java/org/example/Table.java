@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Table {
@@ -13,13 +14,15 @@ public class Table {
     private ArrayList<String> appetizers;
     private ArrayList<String> mainCourses;
     private ArrayList<String> desserts;
+    private HashMap<Integer, ArrayList<String>> menuItems;
 
     public Table(int x, int y, int diameter, int number){
         this.x = x;
         this.y = y;
         this.diameter = diameter;
         this.number = number;
-        this.subscribers = new ArrayList<Subscriber>();
+        this.subscribers = new ArrayList<>();
+
         this.appetizers = new ArrayList<>();
         this.appetizers.add("Mushrooms");
         this.appetizers.add("Eggs");
@@ -35,6 +38,11 @@ public class Table {
         this.desserts.add("Chocolate");
         this.desserts.add("Ice cream");
 
+        this.menuItems = new HashMap<>();
+        this.menuItems.put(1, this.appetizers);
+        this.menuItems.put(2, this.mainCourses);
+        this.menuItems.put(3, this.desserts);
+
     }
 
     public void subscribe(Subscriber subscriber){
@@ -45,18 +53,16 @@ public class Table {
         subscribers.remove(subscriber);
     }
 
-    public void order(int tableNumber){
+    public void order(int orderAmount){
         for (Subscriber s: subscribers){
-            Random appetizerRandom = new Random();
-            int appetizerInt = appetizerRandom.nextInt(2);
 
-            Random mainCourseRandom = new Random();
-            int mainCourseInt = mainCourseRandom.nextInt(2);
+            // Random int to select which menu item to get from the current menu
+            Random foodRandom = new Random();
+            int foodInt = foodRandom.nextInt(2);
 
-            Random dessertRandom = new Random();
-            int dessertInt = dessertRandom.nextInt(2);
+            // Gives tables x and y-position, table number, menu item based on how many times the waiter has gone to this table
+            s.recieveOrder(getX(), getY(), getNumber(), menuItems.get(orderAmount).get(foodInt)); // Why can I use int and it works with Integer?
 
-            s.recieveOrder(getX(), getY(), tableNumber, appetizers.get(appetizerInt), mainCourses.get(mainCourseInt), desserts.get(dessertInt));
         }
     }
     public int getX() {

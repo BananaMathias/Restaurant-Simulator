@@ -8,8 +8,8 @@ public class RestaurantMain extends JPanel {
 
     static ArrayList<Waiter> waiters = new ArrayList<Waiter>();
     static ArrayList<Table> tables = new ArrayList<Table>();
-    private static double[] visits = {0, 0, 0, 0, 0, 0};
-    private static double totalVisits = 0;
+    private static double[] visits = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    private static double totalVisits = 0.0;
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
@@ -36,19 +36,24 @@ public class RestaurantMain extends JPanel {
 
         // what should happen with the waiter each time the simulation loops
         for (Waiter w : waiters) {
+            // Runs update() to run the correct walk method in Waiter
             w.update();
 
+            // If the Waiter is IDLE
             if (w.isIdle()) {
+
+                // Gets random table to go to
                 Random randomTable = new Random();
-                int tableNumber = randomTable.nextInt(5);
+                int tableNumber = randomTable.nextInt(6);
+
+                // If the Waiter has not gone to any table
                 if (totalVisits == 0){
                     randomOrder(tableNumber);
                 }
 
-                else if (visits[tableNumber]/totalVisits <= (0.17)){
+                // If the table has gone to a table, it will not go to the same table until it has gone to every other table first
+                else if (visits[tableNumber]/totalVisits <= (1.0/6.0)){
                     randomOrder(tableNumber);
-                    toString(visits);
-                    System.out.println(totalVisits);
 
                 }
 
@@ -63,9 +68,12 @@ public class RestaurantMain extends JPanel {
     }
 
     static void randomOrder(int tableNumber){
-        tables.get(tableNumber).order(tableNumber);
+        // Adds a visit to log amount of visits Waiters has done to a specific table
         visits[tableNumber]++;
         totalVisits++;
+        // Runs the correct table's order()
+        tables.get(tableNumber).order( (int) visits[tableNumber]);
+
     }
 
     @Override
@@ -150,4 +158,5 @@ public class RestaurantMain extends JPanel {
         }
         System.out.print("]");
     }
+
 }
