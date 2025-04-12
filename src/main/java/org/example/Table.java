@@ -11,37 +11,15 @@ public class Table {
     private final int diameter;
     private final int number;
     private ArrayList<Subscriber> subscribers;
-    private ArrayList<String> appetizers;
-    private ArrayList<String> mainCourses;
-    private ArrayList<String> desserts;
-    private HashMap<Integer, ArrayList<String>> menuItems;
+    private Menu menu;
 
-    public Table(int x, int y, int diameter, int number){
+    public Table(int x, int y, int diameter, int number, Menu menu){
         this.x = x;
         this.y = y;
         this.diameter = diameter;
         this.number = number;
         this.subscribers = new ArrayList<>();
-
-        this.appetizers = new ArrayList<>();
-        this.appetizers.add("Mushrooms");
-        this.appetizers.add("Eggs");
-        this.appetizers.add("Pickles");
-
-        this.mainCourses = new ArrayList<>();
-        this.mainCourses.add("Spaghetti carbonara");
-        this.mainCourses.add("Meatballs");
-        this.mainCourses.add("Joel");
-
-        this.desserts = new ArrayList<>();
-        this.desserts.add("Mathias");
-        this.desserts.add("Chocolate");
-        this.desserts.add("Ice cream");
-
-        this.menuItems = new HashMap<>();
-        this.menuItems.put(1, this.appetizers);
-        this.menuItems.put(2, this.mainCourses);
-        this.menuItems.put(3, this.desserts);
+        this.menu = menu;
 
     }
 
@@ -61,7 +39,7 @@ public class Table {
             int foodInt = foodRandom.nextInt(2);
 
             // Gives tables x and y-position, table number, menu item based on how many times the waiter has gone to this table
-            s.recieveOrder(getX(), getY(), getNumber(), menuItems.get(orderAmount).get(foodInt)); // Why can I use int and it works with Integer?
+            s.retrieveOrder(getX(), getY(), getNumber(), this.menu.getMenuItems().get(orderAmount).get(foodInt)); // Why can I use int and it works with Integer?
 
         }
     }

@@ -10,17 +10,21 @@ public class RestaurantMain extends JPanel {
     static ArrayList<Table> tables = new ArrayList<Table>();
     private static double[] visits = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     private static double totalVisits = 0.0;
+    private static MasterChef masterChef;
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
+
+        Menu menu = Menu.getInstance();
+        masterChef = MasterChef.getInstance(450, 300, 40, menu);
         for (int i = 0; i < 3; i++){
-           tables.add(new Table((515 + i*260), 50, 50, i));
+           tables.add(new Table((515 + i*260), 50, 50, i, menu));
         }
         for (int i = 3; i < 6; i++) {
-            tables.add(new Table((i * 260 - 270), 500, 50, i));
+            tables.add(new Table((i * 260 - 270), 500, 50, i, menu));
         }
         //tables.add(new Table(1000,500,50,1));
-        waiters.add(new Waiter(507,300,40,tables));
+        waiters.add(new Waiter(507,300,40,tables, masterChef));
 
         for (Waiter w: waiters){
             for (Table t: tables){
@@ -98,6 +102,14 @@ public class RestaurantMain extends JPanel {
 
         // Draw the waiters
         drawWaiters(g);
+
+        // Draw master chef office
+        g.setColor(new Color(93, 191, 73, 255));
+        g.fillRect(410, 200, 60, 200);
+
+        // Draw the master chef
+        g.setColor(Color.BLUE);
+        g.fillOval(masterChef.getX(), masterChef.getY(), masterChef.getDiameter(), masterChef.getDiameter());
 
         // MORE CODE HERE
     }

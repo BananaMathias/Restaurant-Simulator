@@ -11,13 +11,15 @@ public class Waiter extends Walker implements Subscriber{
     private ArrayList<Table> tables;
     private enum States {IDLE, GOING_TO_TABLE, GOING_HOME}
     private States state = States.IDLE;
+    private MasterChef masterChef;
 
 
-    public Waiter(int x, int y, int diameter, ArrayList<Table> tables){
+    public Waiter(int x, int y, int diameter, ArrayList<Table> tables, MasterChef masterChef){
         super(x, y);
         this.diameter = diameter;
         this.tables = tables;
         this.orderFromTable = new HashMap<>();
+        this.masterChef = masterChef;
 
     }
     public int getX() {
@@ -32,7 +34,7 @@ public class Waiter extends Walker implements Subscriber{
         return this.diameter;
     }
 
-    public void recieveOrder(int x, int y, int tableNumber, String foodOrder){
+    public void retrieveOrder(int x, int y, int tableNumber, String foodOrder){
 
         // Puts order from the table into orderFromTable to be given to MasterChef
         this.orderFromTable.put(tableNumber, foodOrder);
@@ -98,6 +100,7 @@ public class Waiter extends Walker implements Subscriber{
                 long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
                 // If it has gone the period time:
                 if ((thisTime - lastTime) >= period) {
+                    handOrder();
                     state = States.IDLE;
                     startCounting = true;
 
@@ -105,6 +108,11 @@ public class Waiter extends Walker implements Subscriber{
             }
         }
 
+    }
+    // Hands order to masterChef and clears the order the waiter has
+    private void handOrder(){
+        masterChef.takeOrder(this.orderFromTable);
+        this.orderFromTable.clear();
     }
 
     public boolean isIdle() { return (state == States.IDLE); }
