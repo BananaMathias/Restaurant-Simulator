@@ -2,7 +2,7 @@ package org.example;
 
 import java.util.HashMap;
 
-public class MasterChef {
+public class MasterChef implements ChefListener {
 
     private static MasterChef masterChefInstance = null;
     private int diameter;
@@ -10,19 +10,28 @@ public class MasterChef {
     private int y;
     private Menu menu;
     private HashMap<Integer, String> ordersFromTables;
+    private PrepChef prepChef;
+    private GardeMangerChef gardeMangerChef;
+    private SousChef sousChef;
+    private PatissierChef patissierChef;
 
 
-    private MasterChef(int x, int y, int diameter, Menu menu){
+
+    private MasterChef(int x, int y, int diameter, Menu menu, PrepChef prepChef, GardeMangerChef gardeMangerChef, SousChef sousChef, PatissierChef patissierChef){
         this.x = x;
         this.y = y;
         this.diameter = diameter;
         this.menu = menu;
         this.ordersFromTables = new HashMap<>();
+        this.prepChef = prepChef;
+        this.gardeMangerChef = gardeMangerChef;
+        this.sousChef = sousChef;
+        this.patissierChef = patissierChef;
     }
 
-    public static MasterChef getInstance(int x, int y, int diameter, Menu menu) {
+    public static MasterChef getInstance(int x, int y, int diameter, Menu menu, PrepChef prepChef, GardeMangerChef gardeMangerChef, SousChef sousChef, PatissierChef patissierChef) {
         if (masterChefInstance == null) {
-            masterChefInstance = new MasterChef(x, y, diameter, menu);
+            masterChefInstance = new MasterChef(x, y, diameter, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
         }
         return masterChefInstance;
     }
@@ -40,6 +49,11 @@ public class MasterChef {
     // Takes order and puts in order list
     public void takeOrder(HashMap<Integer, String> orderFromTable){
         ordersFromTables.putAll(orderFromTable);
+
+    }
+
+    @Override
+    public void notifyListener() {
 
     }
 

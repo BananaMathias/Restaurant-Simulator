@@ -10,6 +10,7 @@ public abstract class Walker {
     protected int y;
     protected int targetX;
     protected int targetY;
+    protected int diameter = 50;
 
     public Walker(int x, int y) {
         this.x = x;
@@ -65,5 +66,17 @@ public abstract class Walker {
             startCounting = false;
             System.out.println(action);
         }
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public int getDiameter() {
+        return this.diameter;
     }
 }

@@ -8,15 +8,21 @@ public class RestaurantMain extends JPanel {
 
     static ArrayList<Waiter> waiters = new ArrayList<Waiter>();
     static ArrayList<Table> tables = new ArrayList<Table>();
+    static ArrayList<Chef> chefs = new ArrayList<>();
     private static double[] visits = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     private static double totalVisits = 0.0;
     private static MasterChef masterChef;
+    private static PrepChef prepChef;
+    private static GardeMangerChef gardeMangerChef;
+    private static SousChef sousChef;
+    private static PatissierChef patissierChef;
+
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
 
         Menu menu = Menu.getInstance();
-        masterChef = MasterChef.getInstance(450, 300, 40, menu);
+        masterChef = MasterChef.getInstance(450, 300, 40, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
         for (int i = 0; i < 3; i++){
            tables.add(new Table((515 + i*260), 50, 50, i, menu));
         }
@@ -25,6 +31,16 @@ public class RestaurantMain extends JPanel {
         }
         //tables.add(new Table(1000,500,50,1));
         waiters.add(new Waiter(507,300,40,tables, masterChef));
+
+        prepChef = new PrepChef(50, 50);
+        gardeMangerChef = new GardeMangerChef(300, 75);
+        sousChef = new SousChef(125, 375);
+        patissierChef = new PatissierChef(400, 500);
+
+        chefs.add(prepChef);
+        chefs.add(gardeMangerChef);
+        chefs.add(sousChef);
+        chefs.add(patissierChef);
 
         for (Waiter w: waiters){
             for (Table t: tables){
@@ -97,11 +113,22 @@ public class RestaurantMain extends JPanel {
         g.fillRect(490, 270, 20, 100);
         g.fillRect(1090, 270, 20, 100);
 
+        // Draw the chefs' workplaces
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(0, 0, 50, 150); // Prepchef
+        g.fillRect(50, 0, 100, 50);
+        g.fillRect(350, 50, 100, 100); // Garde Manger
+        g.fillRect(450, 445, 50, 150); // Patissier
+        g.fillRect(50, 300, 75, 200); // Sous chef
+
         // Draw tables
         drawTables(g);
 
         // Draw the waiters
         drawWaiters(g);
+
+        // Draw the chefs
+        drawChefs(g);
 
         // Draw master chef office
         g.setColor(new Color(93, 191, 73, 255));
@@ -131,6 +158,15 @@ public class RestaurantMain extends JPanel {
             g.fillOval(waiter.getX(), waiter.getY(), waiter.getDiameter(), waiter.getDiameter()); // Draw circle with diameter of 50 pixels
             g.setColor(Color.WHITE);
             g.fillOval(waiter.getX()+7, waiter.getY()+7, waiter.getDiameter()-14, waiter.getDiameter()-14); // Draw circle with diameter of 50 pixels
+        }
+    }
+
+    static void drawChefs(Graphics g){
+        for (Chef chef : chefs) {
+            g.setColor(Color.GRAY);
+            g.fillOval(chef.getX(), chef.getY(), chef.getDiameter(), chef.getDiameter()); // Draw circle with diameter of 50 pixels
+            g.setColor(chef.getColor());
+            g.fillOval(chef.getX()+3, chef.getY()+3, chef.getDiameter()-6, chef.getDiameter()-6); // Draw circle with diameter of 50 pixels
         }
     }
 

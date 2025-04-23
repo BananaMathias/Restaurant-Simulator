@@ -53,7 +53,7 @@ public class Waiter extends Walker implements Subscriber{
         // If everything has gone correctly this should always be true, just a failsafe
         if (isGoingToTable()){
             // Runs goTo() and checks if it returns true for both x and y
-            if (goTo()) { //Why super.goTo()?
+            if (goTo()) {
                 //Starts a timer if startCounting is true
                 startTimer(2000, "Is taking order");
                 long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
