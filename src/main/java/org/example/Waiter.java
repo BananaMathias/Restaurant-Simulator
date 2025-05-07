@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class Waiter extends Walker implements Subscriber{
     ;
     private int diameter = 50;
-    private HashMap<Integer, String> orderFromTable;
+    private HashMap<Integer, ArrayList<String>> orderFromTable;
     private ArrayList<Table> tables;
     private enum States {IDLE, GOING_TO_TABLE, GOING_HOME}
     private States state = States.IDLE;
@@ -34,10 +34,10 @@ public class Waiter extends Walker implements Subscriber{
         return this.diameter;
     }
 
-    public void retrieveOrder(int x, int y, int tableNumber, String foodOrder){
+    public void retrieveOrder(int x, int y, int tableNumber, ArrayList<String> foodOrders){
 
         // Puts order from the table into orderFromTable to be given to MasterChef
-        this.orderFromTable.put(tableNumber, foodOrder);
+        this.orderFromTable.put(tableNumber,foodOrders);
 
         // If the waiter is idle, makes its state into GOING_TO_TABLE to make update() run walkToTable()
         if (isIdle()){

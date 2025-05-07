@@ -12,6 +12,7 @@ public class Table {
     private final int number;
     private ArrayList<Subscriber> subscribers;
     private Menu menu;
+    private int guestAmount;
 
     public Table(int x, int y, int diameter, int number, Menu menu){
         this.x = x;
@@ -20,6 +21,7 @@ public class Table {
         this.number = number;
         this.subscribers = new ArrayList<>();
         this.menu = menu;
+
 
     }
 
@@ -34,15 +36,24 @@ public class Table {
     public void order(int orderAmount){
         for (Subscriber s: subscribers){
 
-            // Random int to select which menu item to get from the current menu
-            Random foodRandom = new Random();
-            int foodInt = foodRandom.nextInt(2);
 
-            // Gives tables x and y-position, table number, menu item based on how many times the waiter has gone to this table
-            s.retrieveOrder(getX(), getY(), getNumber(), this.menu.getMenuItems().get(orderAmount).get(foodInt)); // Why can I use int and it works with Integer?
+            // Gives tables x and y-position, table number, menu items based on how many times the waiter has gone to this table and how many guests at the table
+            s.retrieveOrder(getX(), getY(), getNumber(), bunchOrders(orderAmount)); // Why can I use int and it works with Integer?
 
         }
     }
+
+    private ArrayList<String> bunchOrders(int orderAmount){
+        // Random int to select which menu item to get from the current menu, gets one meal for each guest
+        Random foodRandom = new Random();
+        ArrayList<String> foodOrders = new ArrayList<>();
+        for (int i = 0; i < guestAmount; i++) {
+            int foodInt = foodRandom.nextInt(2);
+            foodOrders.add(this.menu.getMenuItems().get(orderAmount).get(foodInt));
+        }
+        return foodOrders;
+    }
+
     public int getX() {
         return this.x;
     }
@@ -56,6 +67,8 @@ public class Table {
     }
 
     public int getNumber(){return this.number;}
+
+    public int getGuestAmount(){return guestAmount;}
 
 
 
