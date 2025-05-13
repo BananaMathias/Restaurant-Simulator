@@ -20,7 +20,7 @@ public class MasterChef implements ChefListener {
 
 
 
-    private MasterChef(int x, int y, int diameter, Menu menu, PrepChef prepChef, GardeMangerChef gardeMangerChef, SousChef sousChef, PatissierChef patissierChef){
+    private MasterChef(int x, int y, int diameter, Menu menu, PrepChef prepChef, Chef gardeMangerChef, Chef sousChef, Chef patissierChef){
         this.x = x;
         this.y = y;
         this.diameter = diameter;
@@ -32,7 +32,7 @@ public class MasterChef implements ChefListener {
         this.patissierChef = patissierChef;
     }
 
-    public static MasterChef getInstance(int x, int y, int diameter, Menu menu, PrepChef prepChef, GardeMangerChef gardeMangerChef, SousChef sousChef, PatissierChef patissierChef) {
+    public static MasterChef getInstance(int x, int y, int diameter, Menu menu, PrepChef prepChef, Chef gardeMangerChef, Chef sousChef, Chef patissierChef) {
         if (masterChefInstance == null) {
             masterChefInstance = new MasterChef(x, y, diameter, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
         }
@@ -52,9 +52,14 @@ public class MasterChef implements ChefListener {
     // Takes order and puts in order list
     public void takeOrder(HashMap<Integer, ArrayList<String>> orderFromTable){
         ordersFromTables.putAll(orderFromTable);
+        System.out.println(orderFromTable.get(0));
     }
 
     private void distributeOrder(){
+        if (ordersFromTables.isEmpty()){
+            return;
+        }
+
         Cooking chef = null;
 
         ArrayList<String> order = chooseOrderFromOrders();
@@ -84,7 +89,7 @@ public class MasterChef implements ChefListener {
 
     @Override
     public void notifyListener() {
-
+        distributeOrder();
     }
 
     // Strategy pattern depending on which chef should take the order

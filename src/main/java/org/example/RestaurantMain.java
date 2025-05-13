@@ -13,16 +13,16 @@ public class RestaurantMain extends JPanel {
     private static double totalVisits = 0.0;
     private static MasterChef masterChef;
     private static PrepChef prepChef;
-    private static GardeMangerChef gardeMangerChef;
-    private static SousChef sousChef;
-    private static PatissierChef patissierChef;
+    private static Chef gardeMangerChef;
+    private static Chef sousChef;
+    private static Chef patissierChef;
 
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
     static void setupRestaurant(){
 
         Menu menu = Menu.getInstance();
-        masterChef = MasterChef.getInstance(450, 300, 40, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
+
         for (int i = 0; i < 3; i++){
            tables.add(new Table((515 + i*260), 50, 50, i, menu));
         }
@@ -30,18 +30,23 @@ public class RestaurantMain extends JPanel {
             tables.add(new Table((i * 260 - 270), 500, 50, i, menu));
         }
         //tables.add(new Table(1000,500,50,1));
-        waiters.add(new Waiter(507,300,40,tables, masterChef));
 
         prepChef = new PrepChef(50, 50);
         gardeMangerChef = new GardeMangerChef(300, 75);
         sousChef = new SousChef(125, 375);
         patissierChef = new PatissierChef(400, 500);
 
-        chefs.add(prepChef);
-        chefs.add(gardeMangerChef);
-        chefs.add(sousChef);
-        chefs.add(patissierChef);
+        masterChef = MasterChef.getInstance(450, 300, 40, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
+        waiters.add(new Waiter(507,300,40,tables, masterChef));
 
+        chefs.add(gardeMangerChef);
+        //chefs.add(sousChef);
+        //chefs.add(patissierChef);
+
+        for (Chef c: chefs){
+            c.subscribe(masterChef);
+
+        }
         for (Waiter w: waiters){
             for (Table t: tables){
                 t.subscribe(w);
@@ -85,6 +90,9 @@ public class RestaurantMain extends JPanel {
 
         }
         // ... similar updates for all other agents in the simulation.
+
+        gardeMangerChef.update();
+
     }
 
     static void randomOrder(int tableNumber){
