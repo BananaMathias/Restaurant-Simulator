@@ -12,7 +12,7 @@ public class Table {
     private final int number;
     private ArrayList<Subscriber> subscribers;
     private Menu menu;
-    private int guestAmount;
+    private int guestAmount = 3;
 
     public Table(int x, int y, int diameter, int number, Menu menu){
         this.x = x;
@@ -35,8 +35,6 @@ public class Table {
 
     public void order(int orderAmount){
         for (Subscriber s: subscribers){
-
-
             // Gives tables x and y-position, table number, menu items based on how many times the waiter has gone to this table and how many guests at the table
             s.retrieveOrder(getX(), getY(), getNumber(), bunchOrders(orderAmount)); // Why can I use int and it works with Integer?
 

@@ -8,6 +8,7 @@ public class Chef extends Walker implements Cooking{
     protected States state = States.IDLE;
     protected Color color;
     protected ArrayList<ChefListener> subscribers;
+    protected int ingredients = 10;
 
     public Chef(int x, int y){
         super(x, y);

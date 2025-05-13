@@ -63,7 +63,16 @@ public class GardeMangerChef extends Chef{
         subscribers.get(0).notifyListener();
     }
 
-    private void cook(){}
+    private void cook(){
+        while (ingredients < 3){
+
+
+
+
+
+            ingredients -= 3;
+        }
+    }
     private boolean isGoingToMaster(){return state == States.GOING_TO_MASTER;}
     private boolean isGoingHome(){return state == States.GOING_HOME;}
 

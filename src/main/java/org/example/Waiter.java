@@ -109,8 +109,19 @@ public class Waiter extends Walker implements Subscriber{
         }
 
     }
+
+    private ArrayList<String> chooseOrderFromOrders() {
+        Object objectKey = orderFromTable.keySet().toArray()[0];
+        Integer key = (Integer) objectKey;
+        ArrayList<String> order = orderFromTable.get(key);
+        //orderFromTable.remove(key);
+
+        return order;
+    }
     // Hands order to masterChef and clears the order the waiter has
     private void handOrder(){
+        ArrayList<String> arrayList = chooseOrderFromOrders();
+        arrayList.toString();
         masterChef.takeOrder(this.orderFromTable);
         this.orderFromTable.clear();
     }

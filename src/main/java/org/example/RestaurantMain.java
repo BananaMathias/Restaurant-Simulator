@@ -100,7 +100,7 @@ public class RestaurantMain extends JPanel {
         visits[tableNumber]++;
         totalVisits++;
         // Runs the correct table's order()
-        tables.get(tableNumber).order( (int) visits[tableNumber]);
+        tables.get(tableNumber).order((int) visits[tableNumber]);
 
     }
 
@@ -207,9 +207,9 @@ public class RestaurantMain extends JPanel {
         }
     }
 
-    public static void toString(double[] list) {
+    public static void toString(ArrayList<String> a) {
         System.out.print("[");
-        for (double element : list) {
+        for (String element : a) {
             System.out.print(element + ", ");
         }
         System.out.print("]");

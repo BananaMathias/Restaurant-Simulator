@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+
 public abstract class Walker {
 
     protected static long period; //one lap
@@ -79,4 +81,13 @@ public abstract class Walker {
     public int getDiameter() {
         return this.diameter;
     }
+
+    public static void toString(ArrayList<String> a) {
+        System.out.print("[");
+        for (String element : a) {
+            System.out.print(element + ", ");
+        }
+        System.out.print("]");
+    }
+
 }

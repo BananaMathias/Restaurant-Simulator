@@ -52,7 +52,6 @@ public class MasterChef implements ChefListener {
     // Takes order and puts in order list
     public void takeOrder(HashMap<Integer, ArrayList<String>> orderFromTable){
         ordersFromTables.putAll(orderFromTable);
-        System.out.println(orderFromTable.get(0));
     }
 
     private void distributeOrder(){
