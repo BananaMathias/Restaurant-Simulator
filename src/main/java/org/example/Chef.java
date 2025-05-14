@@ -2,21 +2,26 @@ package org.example;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Chef extends Walker implements Cooking{
-    protected enum States {IDLE, GOING_TO_MASTER, GOING_HOME, MAKING_FOOD}
+    protected enum States {IDLE, GOING_TO_MASTER, GOING_HOME, DELIVERING_FOOD, MAKING_FOOD}
     protected States state = States.IDLE;
     protected Color color;
-    protected ArrayList<ChefListener> subscribers;
+    protected ArrayList<ChefListener> masterSubscribers;
+    protected ArrayList<ChefListener> prepSubscribers;
+    HashMap<Integer, ArrayList<String>> ordersToComplete;
+    HashMap<Integer, ArrayList<String>> completedOrders;
     protected int ingredients = 10;
 
     public Chef(int x, int y){
         super(x, y);
-        subscribers = new ArrayList<>();
+        masterSubscribers = new ArrayList<>();
+        prepSubscribers = new ArrayList<>();
 
     }
 
-    public void startCooking(ArrayList<String> order){}
+    public void startCooking(HashMap<Integer, ArrayList<String>> order){}
 
     public Color getColor(){
         return this.color;
@@ -26,15 +31,39 @@ public class Chef extends Walker implements Cooking{
 
     public void notifyMasterChef(){}
 
-    public void subscribe(ChefListener subscriber){
-        subscribers.add(subscriber);
-        System.out.println(subscribers.get(0));
+    public void masterSubscribe(ChefListener masterSubscriber){
+        masterSubscribers.add(masterSubscriber);
+        System.out.println(masterSubscribers.get(0));
     }
 
-    public void unsubscribe(ChefListener subscriber){
-        subscribers.remove(subscriber);
+    public void masterUnsubscribe(ChefListener masterSubscriber){
+        masterSubscribers.remove(masterSubscriber);
+    }
+
+    public void prepSubscribe(ChefListener masterSubscriber){
+        prepSubscribers.add(masterSubscriber);
+    }
+
+    public void prepUnsubscribe(ChefListener masterSubscriber){
+        masterSubscribers.remove(masterSubscriber);
+    }
+
+    protected ArrayList<String> getOrderArrayOrKey(boolean wantKey){
+        Object objectKey = ordersToComplete.keySet().toArray()[0];
+        Integer key = (Integer) objectKey;
+        if (wantKey){
+            return objectKey;
+        }
+        ArrayList<String> order = ordersToComplete.get(key);
+
+        ordersToComplete.remove(key);
+
+        return order;
+
     }
     // Publisher here
+
+    //FIX SO I CAN GET RETURN KEY SO THAT I CAN USE IT IN GARDEMANGERCHEF CHECK COMMENTS THERE
 
 
 }

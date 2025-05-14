@@ -61,7 +61,7 @@ public class MasterChef implements ChefListener {
 
         Cooking chef = null;
 
-        ArrayList<String> order = chooseOrderFromOrders();
+        HashMap<Integer, ArrayList<String>> order = chooseOrderFromOrders();
         if (menu.getMenuItems().get(1).contains(order.get(0))){
             chef = gardeMangerChef;
         }
@@ -76,10 +76,11 @@ public class MasterChef implements ChefListener {
 
     }
 
-    private ArrayList<String> chooseOrderFromOrders(){
+    private HashMap<Integer, ArrayList<String>> chooseOrderFromOrders(){
         Object objectKey = ordersFromTables.keySet().toArray()[0];
         Integer key = (Integer) objectKey;
-        ArrayList<String> order = ordersFromTables.get(key);
+        HashMap<Integer, ArrayList<String>> order = new HashMap<>();
+        order.put(key,ordersFromTables.get(key));
         ordersFromTables.remove(key);
 
         return order;
