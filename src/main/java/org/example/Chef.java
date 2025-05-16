@@ -18,7 +18,7 @@ public class Chef extends Walker implements Cooking{
         super(x, y);
         masterSubscribers = new ArrayList<>();
         prepSubscribers = new ArrayList<>();
-
+        completedOrders = new HashMap<>();
     }
 
     public void startCooking(HashMap<Integer, ArrayList<String>> order){}

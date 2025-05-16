@@ -1,5 +1,6 @@
 package org.example;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -31,6 +32,7 @@ public class MasterChef implements ChefListener {
         this.gardeMangerChef = gardeMangerChef;
         this.sousChef = sousChef;
         this.patissierChef = patissierChef;
+        ordersToBeDelivered = new HashMap<>();
     }
 
     public static MasterChef getInstance(int x, int y, int diameter, Menu menu, PrepChef prepChef, Chef gardeMangerChef, Chef sousChef, Chef patissierChef) {
@@ -67,14 +69,16 @@ public class MasterChef implements ChefListener {
         Cooking chef = null;
 
         HashMap<Integer, ArrayList<String>> order = chooseOrderFromOrders();
-        if (menu.getMenuItems().get(1).contains(order.get(0))){
-            chef = gardeMangerChef;
+        ArrayList<String> orderArray = getOrderArray(order);
+
+        if (menu.getMenuItems().get(1).contains(orderArray.get(0))){
+            chef = this.gardeMangerChef;
         }
-        else if (menu.getMenuItems().get(2).contains(order.get(0))){
-            chef = sousChef;
+        else if (menu.getMenuItems().get(2).contains(orderArray.get(0))){
+            chef = this.sousChef;
         }
-        else if (menu.getMenuItems().get(3).contains(order.get(0))){
-            chef = patissierChef;
+        else if (menu.getMenuItems().get(3).contains(orderArray.get(0))){
+            chef = this.patissierChef;
         }
 
         chef.startCooking(order);
@@ -90,6 +94,16 @@ public class MasterChef implements ChefListener {
 
         return order;
 
+    }
+
+    private ArrayList<String> getOrderArray(HashMap<Integer, ArrayList<String>> orderHashmap) {
+        Object objectKey = orderHashmap.keySet().toArray()[0];
+        Integer key = (Integer) objectKey;
+
+        ArrayList<String> order = orderHashmap.get(key);
+        order.add(key.toString());
+
+        return order;
     }
 
     @Override
