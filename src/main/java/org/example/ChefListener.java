@@ -1,7 +1,11 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public interface ChefListener {
 
     void notifyListener();
-    public void takeOrder();
+    void takeOrderFromChef(HashMap<Integer, ArrayList<String>> completedOrders);
+
 }

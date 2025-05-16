@@ -35,6 +35,9 @@ public class GardeMangerChef extends Chef{
                 cook();
                 break;
 
+            case DELIVERING_FOOD:
+                deliverFood();
+
             case IDLE:
                 notifyMasterChef();
 
@@ -45,14 +48,14 @@ public class GardeMangerChef extends Chef{
         if (isGoingToMaster()){
             if (goTo()){
                 state = States.GOING_HOME;
-                targetX = 300;
-                targetY = 75;
             }
         }
     }
 
     private void walkHome(){
         if (isGoingHome()){
+            targetX = 300;
+            targetY = 75;
             if (goTo()){
                 if (ordersToComplete.isEmpty()){
                     this.state = States.IDLE;
@@ -66,49 +69,63 @@ public class GardeMangerChef extends Chef{
     }
     @Override
     public void notifyMasterChef(){
-        masterSubscribers.get(0).notifyListener();
+        for (ChefListener masterChef: masterSubscribers){
+            masterChef.notifyListener();
+        }
     }
 
-    private void cook() {
-
+    private void checkIngredients(){
         if ((double) ingredients/3.0 <= ordersToComplete.size()){
             for (ChefListener prepChef: prepSubscribers){
                 prepChef.notifyListener();
             }
         }
-        ArrayList<String> ordersToCompleteArray = getOrderArray();
-        ArrayList<String> completedOrdersArray = new ArrayList<>();
+    }
 
-        while (!ordersToCompleteArray.isEmpty()) {
+    private void cook() {
+        if (isMakingFood()) {
+            checkIngredients();
 
-            startTimer(2000, "Is now idle");
-            long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
-            // If it has gone the period time:
-            if ((thisTime - lastTime) >= period) {
-                completedOrdersArray.add(ordersToCompleteArray.get(0));
-                ordersToCompleteArray.remove(0);
-                startCounting = true;
+            ArrayList<String> ordersToCompleteArray = getOrderArray(); // gets the order array from ordersToComplete with the table number at the end of the array
+            int tableNumber = Integer.parseInt(ordersToCompleteArray.get(-1)); // Get the table number from order array
+            ordersToCompleteArray.remove(-1); // Remove key from the Array
+            ArrayList<String> completedOrdersArray = new ArrayList<>();
 
-                ingredients -= 3;
+            while (!ordersToCompleteArray.isEmpty()) {
+
+                startTimer(2000, "Is now idle");
+                long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
+                // If it has gone the period time:
+                if ((thisTime - lastTime) >= period) {
+                    completedOrdersArray.add(ordersToCompleteArray.get(0));
+                    ordersToCompleteArray.remove(0);
+                    startCounting = true;
+
+                    ingredients -= 3;
+                }
+
+                // I NEED TO GET THE KEY WHICH REPRESENTS A TABLE SO THAT COMPLETEDORDERS IS A HASHMAP WITH THE ORDER AND KEY
+                // MIGHT ME ABLE TO JUST MAKE COMPLETEDORDERS = ORDERSTOCOMPLETE
+                completedOrders.put(tableNumber, completedOrdersArray);
+                this.state = States.DELIVERING_FOOD;
+                targetX = 400;
+                targetY = 300;
             }
-
-            // I NEED TO GET THE KEY WHICH REPRESENTS A TABLE SO THAT COMPLETEDORDERS IS A HASHMAP WITH THE ORDER AND KEY
-            // MIGHT ME ABLE TO JUST MAKE COMPLETEDORDERS = ORDERSTOCOMPLETE
-            this.state = States.DELIVERING_FOOD;
-            targetX = 300;
-            targetY = 75;
         }
     }
 
     private void deliverFood(){
         if (isDeliveringFood()){
             if (goTo()){
-
+                for (ChefListener masterChef: masterSubscribers){
+                    masterChef.takeOrderFromChef(completedOrders);
+                }
+                state = States.GOING_HOME;
             }
         }
     }
     private boolean isGoingToMaster(){return this.state == States.GOING_TO_MASTER;}
     private boolean isGoingHome(){return this.state == States.GOING_HOME;}
     private boolean isDeliveringFood(){return this.state == States.DELIVERING_FOOD;}
-
+    private boolean isMakingFood(){return this.state == States.MAKING_FOOD;}
 }

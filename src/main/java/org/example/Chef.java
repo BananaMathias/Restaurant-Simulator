@@ -48,14 +48,12 @@ public class Chef extends Walker implements Cooking{
         masterSubscribers.remove(masterSubscriber);
     }
 
-    protected ArrayList<String> getOrderArrayOrKey(boolean wantKey){
+    protected ArrayList<String> getOrderArray(){
         Object objectKey = ordersToComplete.keySet().toArray()[0];
         Integer key = (Integer) objectKey;
-        if (wantKey){
-            return objectKey;
-        }
+       
         ArrayList<String> order = ordersToComplete.get(key);
-
+        order.add(key.toString());
         ordersToComplete.remove(key);
 
         return order;

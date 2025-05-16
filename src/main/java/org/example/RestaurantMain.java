@@ -45,7 +45,6 @@ public class RestaurantMain extends JPanel {
 
         for (Chef c: chefs){
             c.masterSubscribe(masterChef);
-            c.prepSubscribe(prepChef);
 
         }
         for (Waiter w: waiters){

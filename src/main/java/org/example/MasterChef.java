@@ -13,6 +13,7 @@ public class MasterChef implements ChefListener {
     private int y;
     private Menu menu;
     private HashMap<Integer, ArrayList<String>> ordersFromTables;
+    private HashMap<Integer, ArrayList<String>> ordersToBeDelivered;
     private PrepChef prepChef;
     private Cooking gardeMangerChef;
     private Cooking sousChef;
@@ -50,8 +51,12 @@ public class MasterChef implements ChefListener {
         return this.diameter;
     }
     // Takes order and puts in order list
-    public void takeOrder(HashMap<Integer, ArrayList<String>> orderFromTable){
+    public void takeOrderFromWaiter(HashMap<Integer, ArrayList<String>> orderFromTable){
         ordersFromTables.putAll(orderFromTable);
+    }
+
+    public void takeOrderFromChef(HashMap<Integer, ArrayList<String>> completedOrders){
+        ordersToBeDelivered.putAll(completedOrders);
     }
 
     private void distributeOrder(){
@@ -75,7 +80,7 @@ public class MasterChef implements ChefListener {
         chef.startCooking(order);
 
     }
-
+    // I NEED THE ARRAY NOT HASH MAP BUT I STILL NEED THE HASHMAP TO PARSE TO THE CHEF, MIGHT BE ABLE TO USE ORDERSFROMTABLES TO FIND RIGHT ORDER BUT STILL NEED TO GET THE KEY OUT LIKE GARDERMANGERCHEF
     private HashMap<Integer, ArrayList<String>> chooseOrderFromOrders(){
         Object objectKey = ordersFromTables.keySet().toArray()[0];
         Integer key = (Integer) objectKey;

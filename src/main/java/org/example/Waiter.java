@@ -122,7 +122,7 @@ public class Waiter extends Walker implements Subscriber{
     private void handOrder(){
         ArrayList<String> arrayList = chooseOrderFromOrders();
         arrayList.toString();
-        masterChef.takeOrder(this.orderFromTable);
+        masterChef.takeOrderFromWaiter(this.orderFromTable);
         this.orderFromTable.clear();
     }
 

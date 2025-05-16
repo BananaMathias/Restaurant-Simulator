@@ -3,7 +3,7 @@ package org.example;
 import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 
-public class PrepChef extends Walker implements ChefListener{
+public class PrepChef extends Walker{
 
     protected enum States {IDLE, GOING_TO_CHEF, GOING_HOME}
     States state = States.IDLE;
