@@ -19,7 +19,8 @@ public class MasterChef implements ChefListener {
     private Cooking gardeMangerChef;
     private Cooking sousChef;
     private Cooking patissierChef;
-
+    private enum States {IS_BUSY, IDLE}
+    private States state = States.IDLE;
 
 
     private MasterChef(int x, int y, int diameter, Menu menu, PrepChef prepChef, Chef gardeMangerChef, Chef sousChef, Chef patissierChef){
@@ -81,6 +82,7 @@ public class MasterChef implements ChefListener {
             chef = this.patissierChef;
         }
 
+        state = States.IS_BUSY;
         chef.startCooking(order);
 
     }
@@ -108,10 +110,22 @@ public class MasterChef implements ChefListener {
 
     @Override
     public void notifyListener() {
-        distributeOrder();
+        if (isIdle()){
+            distributeOrder();
+        }
     }
+
 
     // Strategy pattern depending on which chef should take the order
     // Observer for each chef. If masterChef gets appetizer, he should notify correct chef to take care of it
 
+
+
+    private boolean isIdle(){return state == States.IDLE;}
+    private boolean isBusy(){return state == States.IS_BUSY;}
+
+    public void setIdle(){state = States.IDLE;}
+
+
 }
+

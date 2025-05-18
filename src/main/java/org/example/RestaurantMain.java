@@ -40,11 +40,12 @@ public class RestaurantMain extends JPanel {
         waiters.add(new Waiter(507,300,40,tables, masterChef));
 
         chefs.add(gardeMangerChef);
-        //chefs.add(sousChef);
-        //chefs.add(patissierChef);
+        chefs.add(sousChef);
+        chefs.add(patissierChef);
 
         for (Chef c: chefs){
             c.masterSubscribe(masterChef);
+            c.prepSubscribe(prepChef);
 
         }
         for (Waiter w: waiters){
@@ -59,6 +60,7 @@ public class RestaurantMain extends JPanel {
     // Contains the simulation logic, should probably be broken into smaller pieces as the program expands
     static void update() {
 
+        prepChef.update();
         // what should happen with the waiter each time the simulation loops
         for (Waiter w : waiters) {
             // Runs update() to run the correct walk method in Waiter
@@ -91,7 +93,10 @@ public class RestaurantMain extends JPanel {
         }
         // ... similar updates for all other agents in the simulation.
 
-        gardeMangerChef.update();
+        for (Chef chef: chefs){
+            chef.update();
+        }
+
 
     }
 
@@ -138,6 +143,9 @@ public class RestaurantMain extends JPanel {
         // Draw the chefs
         drawChefs(g);
 
+        // Draw the prepChef
+        drawPrepChef(g);
+
         // Draw master chef office
         g.setColor(new Color(93, 191, 73, 255));
         g.fillRect(410, 200, 60, 200);
@@ -176,6 +184,13 @@ public class RestaurantMain extends JPanel {
             g.setColor(chef.getColor());
             g.fillOval(chef.getX()+3, chef.getY()+3, chef.getDiameter()-6, chef.getDiameter()-6); // Draw circle with diameter of 50 pixels
         }
+    }
+
+    static void drawPrepChef(Graphics g){
+        g.setColor(Color.GRAY);
+        g.fillOval(prepChef.getX(), prepChef.getY(), prepChef.getDiameter(), prepChef.getDiameter()); // Draw circle with diameter of 50 pixels
+        g.setColor(prepChef.getColor());
+            g.fillOval(prepChef.getX()+3, prepChef.getY()+3, prepChef.getDiameter()-6, prepChef.getDiameter()-6); // Draw circle with diameter of 50 pixels
     }
 
     public static void main(String[] args) {

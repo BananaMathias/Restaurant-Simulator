@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Waiter extends Walker implements Subscriber{
-    ;
+
     private int diameter = 50;
     private HashMap<Integer, ArrayList<String>> orderFromTable;
     private ArrayList<Table> tables;

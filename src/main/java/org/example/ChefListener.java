@@ -7,5 +7,8 @@ public interface ChefListener {
 
     void notifyListener();
     void takeOrderFromChef(HashMap<Integer, ArrayList<String>> completedOrders);
+    void setIdle();
+    int getX();
+    int getY();
 
 }
