@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class RestaurantMain extends JPanel {
 
-    static ArrayList<Waiter> waiters = new ArrayList<Waiter>();
+    static ArrayList<GetOrderWaiter> getOrderWaiters = new ArrayList<GetOrderWaiter>();
     static ArrayList<Table> tables = new ArrayList<Table>();
     static ArrayList<Chef> chefs = new ArrayList<>();
     private static double[] visits = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -31,13 +31,13 @@ public class RestaurantMain extends JPanel {
         }
         //tables.add(new Table(1000,500,50,1));
 
-        prepChef = new PrepChef(50, 50);
+        prepChef = new PrepChef(50, 50, gardeMangerChef, sousChef, patissierChef);
         gardeMangerChef = new GardeMangerChef(300, 75);
         sousChef = new SousChef(125, 375);
         patissierChef = new PatissierChef(400, 500);
 
         masterChef = MasterChef.getInstance(450, 300, 40, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
-        waiters.add(new Waiter(507,300,40,tables, masterChef));
+        getOrderWaiters.add(new GetOrderWaiter(507,300,40,tables, masterChef));
 
         chefs.add(gardeMangerChef);
         chefs.add(sousChef);
@@ -48,7 +48,7 @@ public class RestaurantMain extends JPanel {
             c.prepSubscribe(prepChef);
 
         }
-        for (Waiter w: waiters){
+        for (GetOrderWaiter w: getOrderWaiters){
             for (Table t: tables){
                 t.subscribe(w);
             }
@@ -62,18 +62,18 @@ public class RestaurantMain extends JPanel {
 
         prepChef.update();
         // what should happen with the waiter each time the simulation loops
-        for (Waiter w : waiters) {
-            // Runs update() to run the correct walk method in Waiter
+        for (GetOrderWaiter w : getOrderWaiters) {
+            // Runs update() to run the correct walk method in GetOrderWaiter
             w.update();
 
-            // If the Waiter is IDLE
+            // If the GetOrderWaiter is IDLE
             if (w.isIdle()) {
 
                 // Gets random table to go to
                 Random randomTable = new Random();
                 int tableNumber = randomTable.nextInt(6);
 
-                // If the Waiter has not gone to any table
+                // If the GetOrderWaiter has not gone to any table
                 if (totalVisits == 0){
                     randomOrder(tableNumber);
                 }
@@ -137,7 +137,7 @@ public class RestaurantMain extends JPanel {
         // Draw tables
         drawTables(g);
 
-        // Draw the waiters
+        // Draw the getOrderWaiters
         drawWaiters(g);
 
         // Draw the chefs
@@ -169,11 +169,11 @@ public class RestaurantMain extends JPanel {
     }
 
     static  void drawWaiters(Graphics g){
-        for (Waiter waiter : waiters) {
+        for (GetOrderWaiter getOrderWaiter : getOrderWaiters) {
             g.setColor(Color.BLACK);
-            g.fillOval(waiter.getX(), waiter.getY(), waiter.getDiameter(), waiter.getDiameter()); // Draw circle with diameter of 50 pixels
+            g.fillOval(getOrderWaiter.getX(), getOrderWaiter.getY(), getOrderWaiter.getDiameter(), getOrderWaiter.getDiameter()); // Draw circle with diameter of 50 pixels
             g.setColor(Color.WHITE);
-            g.fillOval(waiter.getX()+7, waiter.getY()+7, waiter.getDiameter()-14, waiter.getDiameter()-14); // Draw circle with diameter of 50 pixels
+            g.fillOval(getOrderWaiter.getX()+7, getOrderWaiter.getY()+7, getOrderWaiter.getDiameter()-14, getOrderWaiter.getDiameter()-14); // Draw circle with diameter of 50 pixels
         }
     }
 

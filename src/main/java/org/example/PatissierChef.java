@@ -9,5 +9,6 @@ public class PatissierChef extends Chef{
         this.color = Color.pink;
         this.homeX = 400;
         this.homeY = 500;
+        this.chef = "patissierChef";
     }
 }

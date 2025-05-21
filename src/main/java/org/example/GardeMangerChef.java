@@ -12,6 +12,7 @@ public class GardeMangerChef extends Chef{
         this.color = Color.GREEN;
         this.homeX = 300;
         this.homeY = 75;
+        this.chef = "gardeMangerChef";
     }
 
 

@@ -74,12 +74,15 @@ public class MasterChef implements ChefListener {
 
         if (menu.getMenuItems().get(1).contains(orderArray.get(0))){
             chef = this.gardeMangerChef;
+            System.out.println("I need the garde manger chef");
         }
         else if (menu.getMenuItems().get(2).contains(orderArray.get(0))){
             chef = this.sousChef;
+            System.out.println("I need the sous chef");
         }
         else if (menu.getMenuItems().get(3).contains(orderArray.get(0))){
             chef = this.patissierChef;
+            System.out.println("I need the patissier chef");
         }
 
         state = States.IS_BUSY;
@@ -92,7 +95,9 @@ public class MasterChef implements ChefListener {
         Integer key = (Integer) objectKey;
         HashMap<Integer, ArrayList<String>> order = new HashMap<>();
         order.put(key,ordersFromTables.get(key));
+
         ordersFromTables.remove(key);
+
 
         return order;
 
@@ -104,6 +109,7 @@ public class MasterChef implements ChefListener {
 
         ArrayList<String> order = orderHashmap.get(key);
         order.add(key.toString());
+
 
         return order;
     }
@@ -127,5 +133,20 @@ public class MasterChef implements ChefListener {
     public void setIdle(){state = States.IDLE;}
 
 
+    public void toString(ArrayList<String> a) {
+        System.out.print("[");
+        for (String element : a) {
+            System.out.print(element + ", ");
+        }
+        System.out.print("]");
+    }
+
+    private HashMap<Integer, ArrayList<String>> deepCopyOrder(HashMap<Integer, ArrayList<String>> original) {
+        HashMap<Integer, ArrayList<String>> copy = new HashMap<>();
+        for (Integer key : original.keySet()) {
+            copy.put(key, new ArrayList<>(original.get(key)));
+        }
+        return copy;
+    }
 }
 

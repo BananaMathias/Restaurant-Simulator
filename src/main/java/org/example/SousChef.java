@@ -9,6 +9,7 @@ public class SousChef extends Chef{
         this.color = Color.BLUE;
         this.homeX = 125;
         this.homeY = 375;
+        this.chef = "sousChef";
     }
 
 

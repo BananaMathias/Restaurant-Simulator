@@ -82,7 +82,8 @@ public abstract class Walker {
         return this.diameter;
     }
 
-    public static void toString(ArrayList<String> a) {
+
+    public void toString(ArrayList<String> a) {
         System.out.print("[");
         for (String element : a) {
             System.out.print(element + ", ");

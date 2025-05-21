@@ -1,27 +1,26 @@
 package org.example;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Waiter extends Walker implements Subscriber{
+public abstract class MasterWaiter extends Walker {
 
-    private int diameter = 50;
-    private HashMap<Integer, ArrayList<String>> orderFromTable;
-    private ArrayList<Table> tables;
-    private enum States {IDLE, GOING_TO_TABLE, GOING_HOME}
-    private States state = States.IDLE;
-    private MasterChef masterChef;
+    protected int diameter = 50;
+    protected HashMap<Integer, ArrayList<String>> orderFromTable;
+    protected enum States {IDLE, GOING_TO_TABLE, GOING_HOME}
+    protected States state = States.IDLE;
+    protected MasterChef masterChef;
+    protected int homeX;
+    protected int homeY;
 
-
-    public Waiter(int x, int y, int diameter, ArrayList<Table> tables, MasterChef masterChef){
+    public MasterWaiter(int x, int y, MasterChef masterChef){
         super(x, y);
-        this.diameter = diameter;
-        this.tables = tables;
-        this.orderFromTable = new HashMap<>();
         this.masterChef = masterChef;
 
     }
+
+    protected abstract void waiterSpecificTask();
+
     public int getX() {
         return this.x;
     }
@@ -34,28 +33,13 @@ public class Waiter extends Walker implements Subscriber{
         return this.diameter;
     }
 
-    public void retrieveOrder(int x, int y, int tableNumber, ArrayList<String> foodOrders){
-
-        // Puts order from the table into orderFromTable to be given to MasterChef
-        this.orderFromTable.put(tableNumber,foodOrders);
-
-        // If the waiter is idle, makes its state into GOING_TO_TABLE to make update() run walkToTable()
-        if (isIdle()){
-            state = States.GOING_TO_TABLE;
-            targetX = x; // Sets the x-coordinate that waiter is going to
-            targetY = y; // Sets the y-coordinate that waiter is going to
-            System.out.println("Is going to table " + tableNumber);
-        }
-
-    }
-
-    private void walkToTable(){
+    protected void walkToTable(){
         // If everything has gone correctly this should always be true, just a failsafe
         if (isGoingToTable()){
             // Runs goTo() and checks if it returns true for both x and y
             if (goTo()) {
                 //Starts a timer if startCounting is true
-                startTimer(2000, "Is taking order");
+                startTimer(2000, "GetOrderWaiter is taking order");
                 long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
 
                 // If the period time is reached:
@@ -72,7 +56,7 @@ public class Waiter extends Walker implements Subscriber{
     }
 
     public void update(){
-        // Runs the different walk methods depending on which state Waiter has
+        // Runs the different walk methods depending on which state GetOrderWaiter has
         switch (state){
             case GOING_TO_TABLE:
                 walkToTable();
@@ -87,20 +71,21 @@ public class Waiter extends Walker implements Subscriber{
         }
 
     }
-    private void walkHome(){
+
+    protected void walkHome(){
         // New target is its home
-        targetX = 507;
-        targetY = 300;
+        targetX = this.homeX;
+        targetY = this.homeY;
         // Failsafe, should always be true but if it is not it does not run goTo()
         if (isGoingHome()) {
             // Runs goTo() and checks if it returns true
             if (goTo()){
                 // Starts timer if startCounting is true
-                startTimer(2000, "Is now idle");
+                startTimer(2000, "GetOrderWaiter is now idle");
                 long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
                 // If it has gone the period time:
                 if ((thisTime - lastTime) >= period) {
-                    handOrder();
+                    waiterSpecificTask();
                     state = States.IDLE;
                     startCounting = true;
 
@@ -108,22 +93,6 @@ public class Waiter extends Walker implements Subscriber{
             }
         }
 
-    }
-
-    private ArrayList<String> chooseOrderFromOrders() {
-        Object objectKey = orderFromTable.keySet().toArray()[0];
-        Integer key = (Integer) objectKey;
-        ArrayList<String> order = orderFromTable.get(key);
-        //orderFromTable.remove(key);
-
-        return order;
-    }
-    // Hands order to masterChef and clears the order the waiter has
-    private void handOrder(){
-        ArrayList<String> arrayList = chooseOrderFromOrders();
-        arrayList.toString();
-        masterChef.takeOrderFromWaiter(this.orderFromTable);
-        this.orderFromTable.clear();
     }
 
     public boolean isIdle() { return (state == States.IDLE); }
@@ -135,11 +104,4 @@ public class Waiter extends Walker implements Subscriber{
     public boolean isGoingHome(){
         return (state == States.GOING_HOME);
     }
-
-    }
-
-
-
-// Have to make targetX and Y better implemented
-
-
+}

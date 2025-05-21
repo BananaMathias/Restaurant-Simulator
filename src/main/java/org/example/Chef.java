@@ -1,10 +1,12 @@
 package org.example;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
-public class Chef extends Walker implements Cooking{
+public abstract class Chef extends Walker implements Cooking{
     protected enum States {IDLE, GOING_TO_MASTER, GOING_HOME, DELIVERING_FOOD, MAKING_FOOD}
     protected States state = States.IDLE;
     protected Color color;
@@ -15,6 +17,7 @@ public class Chef extends Walker implements Cooking{
     protected int ingredients = 10;
     protected int homeX;
     protected int homeY;
+    protected String chef;
 
     public Chef(int x, int y){
         super(x, y);
@@ -45,12 +48,16 @@ public class Chef extends Walker implements Cooking{
     }
 
     protected ArrayList<String> getOrderArray(){
-        Object objectKey = ordersToComplete.keySet().toArray()[0];
-        Integer key = (Integer) objectKey;
-       
-        ArrayList<String> order = ordersToComplete.get(key);
-        order.add(key.toString());
-        ordersToComplete.remove(key);
+
+        String objectKey = Arrays.toString(ordersToComplete.keySet().toArray()) ;
+        String key = String.valueOf(objectKey.toCharArray()[1]);
+
+        char keyChar = key.toCharArray()[0];
+        Integer keyInt = Integer.valueOf(String.valueOf(keyChar));
+        ArrayList<String> order = ordersToComplete.get(keyInt);
+        order.add(keyInt.toString());
+        ordersToComplete.remove(keyInt);
+
 
         return order;
 
@@ -61,6 +68,7 @@ public class Chef extends Walker implements Cooking{
         targetX = masterSubscribers.get(0).getX();
         targetY = masterSubscribers.get(0).getY();
         ordersToComplete = order;
+
 
     }
 
@@ -124,8 +132,7 @@ public class Chef extends Walker implements Cooking{
     private boolean checkIngredients(){
         if ((double) ingredients/3.0 <= ordersToComplete.size()){
             for (PrepChefListener prepChef: prepSubscribers){
-                prepChef.notifyListener(this.homeX, this.homeY);
-                ingredients += 20;
+                prepChef.notifyListener(this.homeX, this.homeY, this.chef);
             }
             return true; // If ingridients is low
         }
@@ -144,15 +151,16 @@ public class Chef extends Walker implements Cooking{
             ArrayList<String> completedOrdersArray = new ArrayList<>();
 
 
-                startTimer(6000, "Is now idle");
+                startTimer(6000, "cook");
                 long thisTime = System.currentTimeMillis(); // Takes new time every update in RestaurantMain
                 // If it has gone the period time:
                 if ((thisTime - lastTime) >= period) {
 
                     completedOrdersArray.addAll(ordersToCompleteArray);
-                    System.out.println("Completed order");
-                    ordersToCompleteArray.clear();
+
                     completedOrders.put(tableNumber, completedOrdersArray);
+                    ordersToCompleteArray.clear();
+                    ordersToComplete.clear();
 
                     targetX = masterSubscribers.get(0).getX();
                     targetY = masterSubscribers.get(0).getY();
@@ -185,7 +193,20 @@ public class Chef extends Walker implements Cooking{
     private boolean isDeliveringFood(){return this.state == States.DELIVERING_FOOD;}
     private boolean isMakingFood(){return this.state == States.MAKING_FOOD;}
 
+
+    private HashMap<Integer, ArrayList<String>> deepCopyOrder(HashMap<Integer, ArrayList<String>> original) {
+        HashMap<Integer, ArrayList<String>> copy = new HashMap<>();
+        for (Integer key : original.keySet()) {
+            copy.put(key, new ArrayList<>(original.get(key)));
+        }
+        return copy;
+    }
+
+    public void addIngredients(int addOn){
+        ingredients += addOn;
+    }
 }
+
 
  /*while (!ordersToCompleteArray.isEmpty()) {
                 //This while loop is pausing everything
