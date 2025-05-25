@@ -6,7 +6,6 @@ import java.util.Random;
 
 public class RestaurantMain extends JPanel {
 
-    static ArrayList<GetOrderWaiter> getOrderWaiters = new ArrayList<GetOrderWaiter>();
     static ArrayList<Table> tables = new ArrayList<Table>();
     static ArrayList<Chef> chefs = new ArrayList<>();
     private static double[] visits = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -16,6 +15,10 @@ public class RestaurantMain extends JPanel {
     private static Chef gardeMangerChef;
     private static Chef sousChef;
     private static Chef patissierChef;
+    private static MasterWaiter getOrderWaiter;
+    private static MasterWaiter deliverOrderWaiter;
+    private static Steward steward;
+    private static ArrayList<MasterWaiter> waiters = new ArrayList<>();
 
     // In here all objects that are needed for operating the restaurant should be created.
     // This is initialisation and determines the initial state of the program.
@@ -31,13 +34,15 @@ public class RestaurantMain extends JPanel {
         }
         //tables.add(new Table(1000,500,50,1));
 
-        prepChef = new PrepChef(50, 50, gardeMangerChef, sousChef, patissierChef);
         gardeMangerChef = new GardeMangerChef(300, 75);
         sousChef = new SousChef(125, 375);
         patissierChef = new PatissierChef(400, 500);
+        prepChef = new PrepChef(50, 50, gardeMangerChef, sousChef, patissierChef);
 
-        masterChef = MasterChef.getInstance(450, 300, 40, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
-        getOrderWaiters.add(new GetOrderWaiter(507,300,40,tables, masterChef));
+        masterChef = MasterChef.getInstance(450, 300, 40, menu, gardeMangerChef, sousChef, patissierChef);
+        getOrderWaiter = new GetOrderWaiter(507,280, masterChef);
+        deliverOrderWaiter = new DeliverOrderWaiter(507, 320, tables, masterChef);
+        steward = new Steward(1070,400,tables);
 
         chefs.add(gardeMangerChef);
         chefs.add(sousChef);
@@ -48,57 +53,62 @@ public class RestaurantMain extends JPanel {
             c.prepSubscribe(prepChef);
 
         }
-        for (GetOrderWaiter w: getOrderWaiters){
-            for (Table t: tables){
-                t.subscribe(w);
-            }
+        for (Table t: tables) {
+            t.waiterSubscribe((WaiterListener) getOrderWaiter);
+            t.stewardSubscribe(steward);
         }
 
-
+        waiters.add(getOrderWaiter);
+        waiters.add(deliverOrderWaiter);
     }
+
+
 
     // Contains the simulation logic, should probably be broken into smaller pieces as the program expands
     static void update() {
 
         prepChef.update();
         // what should happen with the waiter each time the simulation loops
-        for (GetOrderWaiter w : getOrderWaiters) {
-            // Runs update() to run the correct walk method in GetOrderWaiter
-            w.update();
+        // Runs update() to run the correct walk method in GetOrderWaiter
+        getOrderWaiter.update();
+        deliverOrderWaiter.update();
+        // If the GetOrderWaiter is IDLE
+        if (getOrderWaiter.isIdle()){
 
-            // If the GetOrderWaiter is IDLE
-            if (w.isIdle()) {
-
-                // Gets random table to go to
-                Random randomTable = new Random();
-                int tableNumber = randomTable.nextInt(6);
-
+            // Gets random table to go to
+            Random randomTable = new Random();
+            int tableNumber = randomTable.nextInt(6);
+            if (tables.get(tableNumber).isBusy()) {
                 // If the GetOrderWaiter has not gone to any table
-                if (totalVisits == 0){
+                if (totalVisits == 0) {
                     randomOrder(tableNumber);
                 }
 
                 // If the table has gone to a table, it will not go to the same table until it has gone to every other table first
-                else if (visits[tableNumber]/totalVisits <= (1.0/6.0)){
+                else if (visits[tableNumber] / totalVisits <= (1.0 / 6.0)) {
                     randomOrder(tableNumber);
 
                 }
+            }
 
-
+            else  if(!tables.get(tableNumber).isBusy()){
+                // Steward should give new guests
+                tables.get(tableNumber).needGuests();
+                //randomOrder(tableNumber);
             }
         }
 
-        for (Table t: tables){
-
+        for (Table t : tables) {
+            t.updateGuests();
         }
         // ... similar updates for all other agents in the simulation.
 
-        for (Chef chef: chefs){
+        for (Chef chef : chefs) {
             chef.update();
         }
-
-
     }
+
+
 
     static void randomOrder(int tableNumber){
         // Adds a visit to log amount of visits Waiters has done to a specific table
@@ -146,6 +156,12 @@ public class RestaurantMain extends JPanel {
         // Draw the prepChef
         drawPrepChef(g);
 
+        // Draw the steward
+        drawSteward(g);
+
+        // Draw the guests
+        drawGuests(g);
+
         // Draw master chef office
         g.setColor(new Color(93, 191, 73, 255));
         g.fillRect(410, 200, 60, 200);
@@ -169,11 +185,11 @@ public class RestaurantMain extends JPanel {
     }
 
     static  void drawWaiters(Graphics g){
-        for (GetOrderWaiter getOrderWaiter : getOrderWaiters) {
+        for (MasterWaiter w : waiters) {
             g.setColor(Color.BLACK);
-            g.fillOval(getOrderWaiter.getX(), getOrderWaiter.getY(), getOrderWaiter.getDiameter(), getOrderWaiter.getDiameter()); // Draw circle with diameter of 50 pixels
+            g.fillOval(w.getX(), w.getY(), w.getDiameter(), w.getDiameter()); // Draw circle with diameter of 50 pixels
             g.setColor(Color.WHITE);
-            g.fillOval(getOrderWaiter.getX()+7, getOrderWaiter.getY()+7, getOrderWaiter.getDiameter()-14, getOrderWaiter.getDiameter()-14); // Draw circle with diameter of 50 pixels
+            g.fillOval(w.getX()+7, w.getY()+7, w.getDiameter()-14, w.getDiameter()-14); // Draw circle with diameter of 50 pixels
         }
     }
 
@@ -184,6 +200,25 @@ public class RestaurantMain extends JPanel {
             g.setColor(chef.getColor());
             g.fillOval(chef.getX()+3, chef.getY()+3, chef.getDiameter()-6, chef.getDiameter()-6); // Draw circle with diameter of 50 pixels
         }
+    }
+
+    static void drawGuests(Graphics g){
+        for (Table table : tables) {
+            for (Guest guest : table.getGuests()) {
+                g.setColor(Color.GRAY);
+                g.fillOval(guest.getX(), guest.getY(), guest.getDiameter(), guest.getDiameter()); // Draw circle with diameter of 50 pixels
+                g.setColor(guest.getColor());
+                g.fillOval(guest.getX() + 3, guest.getY() + 3, guest.getDiameter() - 6, guest.getDiameter() - 6); // Draw circle with diameter of 50 pixels
+            }
+        }
+    }
+
+    static void drawSteward(Graphics g){
+        g.setColor(Color.GRAY);
+        g.fillOval(steward.getX(), steward.getY(), steward.getDiameter(), steward.getDiameter()); // Draw circle with diameter of 50 pixels
+        g.setColor(steward.getColor());
+        g.fillOval(steward.getX()+3, steward.getY()+3, steward.getDiameter()-6, steward.getDiameter()-6); // Draw circle with diameter of 50 pixels
+
     }
 
     static void drawPrepChef(Graphics g){

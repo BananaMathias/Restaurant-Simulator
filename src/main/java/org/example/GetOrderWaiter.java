@@ -3,20 +3,19 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GetOrderWaiter extends MasterWaiter implements Subscriber{
+public class GetOrderWaiter extends MasterWaiter implements WaiterListener {
 
     private HashMap<Integer, ArrayList<String>> orderFromTable;
 
-    public GetOrderWaiter(int x, int y, int diameter, MasterChef masterChef){
+    public GetOrderWaiter(int x, int y, MasterChef masterChef){
         super(x, y, masterChef);
-        this.diameter = diameter;
         this.orderFromTable = new HashMap<>();
         this.homeX = x;
         this.homeY = y;
 
 
     }
-
+    @Override
     public void retrieveOrder(int x, int y, int tableNumber, ArrayList<String> foodOrders){
 
         // Puts order from the table into orderFromTable to be given to MasterChef
@@ -44,8 +43,6 @@ public class GetOrderWaiter extends MasterWaiter implements Subscriber{
     // Hands order to masterChef and clears the order the waiter has
     @Override
     protected void waiterSpecificTask(){
-        ArrayList<String> arrayList = chooseOrderFromOrders();
-        arrayList.toString();
         masterChef.takeOrderFromWaiter(this.orderFromTable);
         this.orderFromTable.clear();
     }

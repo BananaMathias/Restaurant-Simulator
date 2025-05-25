@@ -104,4 +104,12 @@ public abstract class MasterWaiter extends Walker {
     public boolean isGoingHome(){
         return (state == States.GOING_HOME);
     }
+
+    public void toString(ArrayList<String> a) {
+        System.out.print("[");
+        for (String element : a) {
+            System.out.print(element + ", ");
+        }
+        System.out.print("]");
+    }
 }

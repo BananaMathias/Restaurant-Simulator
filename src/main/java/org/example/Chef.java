@@ -49,16 +49,13 @@ public abstract class Chef extends Walker implements Cooking{
 
     protected ArrayList<String> getOrderArray(){
 
-        String objectKey = Arrays.toString(ordersToComplete.keySet().toArray()) ;
+        String objectKey = Arrays.toString(ordersToComplete.keySet().toArray());
         String key = String.valueOf(objectKey.toCharArray()[1]);
 
         char keyChar = key.toCharArray()[0];
         Integer keyInt = Integer.valueOf(String.valueOf(keyChar));
         ArrayList<String> order = ordersToComplete.get(keyInt);
-        order.add(keyInt.toString());
-        ordersToComplete.remove(keyInt);
-
-
+        order.add(0, keyInt.toString());
         return order;
 
     }
@@ -146,8 +143,8 @@ public abstract class Chef extends Walker implements Cooking{
             }
 
             ArrayList<String> ordersToCompleteArray = getOrderArray(); // gets the order array from ordersToComplete with the table number at the end of the array
-            int tableNumber = Integer.parseInt(ordersToCompleteArray.get(ordersToCompleteArray.size() - 1)); // Get the table number from order array
-            ordersToCompleteArray.remove(ordersToCompleteArray.size() - 1); // Remove key from the Array
+            int tableNumber = Integer.parseInt(ordersToCompleteArray.get(0)); // Get the table number from order array
+            ordersToCompleteArray.remove(0); // Remove key from the Array
             ArrayList<String> completedOrdersArray = new ArrayList<>();
 
 

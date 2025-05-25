@@ -15,7 +15,6 @@ public class MasterChef implements ChefListener {
     private Menu menu;
     private HashMap<Integer, ArrayList<String>> ordersFromTables;
     private HashMap<Integer, ArrayList<String>> ordersToBeDelivered;
-    private PrepChef prepChef;
     private Cooking gardeMangerChef;
     private Cooking sousChef;
     private Cooking patissierChef;
@@ -23,22 +22,21 @@ public class MasterChef implements ChefListener {
     private States state = States.IDLE;
 
 
-    private MasterChef(int x, int y, int diameter, Menu menu, PrepChef prepChef, Chef gardeMangerChef, Chef sousChef, Chef patissierChef){
+    private MasterChef(int x, int y, int diameter, Menu menu, Chef gardeMangerChef, Chef sousChef, Chef patissierChef){
         this.x = x;
         this.y = y;
         this.diameter = diameter;
         this.menu = menu;
         this.ordersFromTables = new HashMap<>();
-        this.prepChef = prepChef;
         this.gardeMangerChef = gardeMangerChef;
         this.sousChef = sousChef;
         this.patissierChef = patissierChef;
         ordersToBeDelivered = new HashMap<>();
     }
 
-    public static MasterChef getInstance(int x, int y, int diameter, Menu menu, PrepChef prepChef, Chef gardeMangerChef, Chef sousChef, Chef patissierChef) {
+    public static MasterChef getInstance(int x, int y, int diameter, Menu menu, Chef gardeMangerChef, Chef sousChef, Chef patissierChef) {
         if (masterChefInstance == null) {
-            masterChefInstance = new MasterChef(x, y, diameter, menu, prepChef, gardeMangerChef, sousChef, patissierChef);
+            masterChefInstance = new MasterChef(x, y, diameter, menu, gardeMangerChef, sousChef, patissierChef);
         }
         return masterChefInstance;
     }
@@ -60,6 +58,10 @@ public class MasterChef implements ChefListener {
 
     public void takeOrderFromChef(HashMap<Integer, ArrayList<String>> completedOrders){
         ordersToBeDelivered.putAll(completedOrders);
+    }
+
+    public HashMap<Integer, ArrayList<String>> giveOrderToWaiter(){
+        return chooseCompletedOrder();
     }
 
     private void distributeOrder(){
@@ -103,14 +105,25 @@ public class MasterChef implements ChefListener {
 
     }
 
+    private HashMap<Integer, ArrayList<String>> chooseCompletedOrder(){
+        Object objectKey = ordersToBeDelivered.keySet().toArray()[0];
+        Integer key = (Integer) objectKey;
+        HashMap<Integer, ArrayList<String>> order = new HashMap<>();
+        order.put(key,ordersToBeDelivered.get(key));
+
+        ordersToBeDelivered.remove(key);
+
+
+        return order;
+    }
+
+
+
     private ArrayList<String> getOrderArray(HashMap<Integer, ArrayList<String>> orderHashmap) {
         Object objectKey = orderHashmap.keySet().toArray()[0];
         Integer key = (Integer) objectKey;
 
         ArrayList<String> order = orderHashmap.get(key);
-        order.add(key.toString());
-
-
         return order;
     }
 
@@ -141,12 +154,9 @@ public class MasterChef implements ChefListener {
         System.out.print("]");
     }
 
-    private HashMap<Integer, ArrayList<String>> deepCopyOrder(HashMap<Integer, ArrayList<String>> original) {
-        HashMap<Integer, ArrayList<String>> copy = new HashMap<>();
-        for (Integer key : original.keySet()) {
-            copy.put(key, new ArrayList<>(original.get(key)));
-        }
-        return copy;
+
+    public HashMap<Integer, ArrayList<String>> getOrdersToBeDelivered(){
+        return ordersToBeDelivered;
     }
 }
 
