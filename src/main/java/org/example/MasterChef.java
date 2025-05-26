@@ -58,9 +58,11 @@ public class MasterChef implements ChefListener {
 
     public void takeOrderFromChef(HashMap<Integer, ArrayList<String>> completedOrders){
         ordersToBeDelivered.putAll(completedOrders);
+
     }
 
     public HashMap<Integer, ArrayList<String>> giveOrderToWaiter(){
+
         return chooseCompletedOrder();
     }
 
@@ -97,7 +99,6 @@ public class MasterChef implements ChefListener {
         Integer key = (Integer) objectKey;
         HashMap<Integer, ArrayList<String>> order = new HashMap<>();
         order.put(key,ordersFromTables.get(key));
-
         ordersFromTables.remove(key);
 
 

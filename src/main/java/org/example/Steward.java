@@ -46,17 +46,14 @@ public class Steward implements StewardListener {
             }
 
             tables.get(tableNumber).setGuests(guests);
-            busy = false;
             System.out.println(busy);
         }
 
     }
 
     public void notifySteward(int tableNumber) {
-        if (!isBusy()) {
-            createGuests(tableNumber);
-            busy = true;
-        }
+        createGuests(tableNumber);
+
     }
 
     public boolean isBusy(){return busy;}

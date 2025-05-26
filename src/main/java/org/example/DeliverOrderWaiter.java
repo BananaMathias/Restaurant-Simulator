@@ -43,6 +43,7 @@ public class DeliverOrderWaiter extends MasterWaiter {
         tables.get(getTableNumberFromOrder()).setFoodToEat(chooseOrderFromOrders());
         //toString(tables.get(getTableNumberFromOrder()).foodToEat);
         orderFromTable.clear();
+
     }
 
 
@@ -75,6 +76,7 @@ public class DeliverOrderWaiter extends MasterWaiter {
                 getOrderFromMaster();
                 waiterSpecificTask();
                 state = States.GOING_TO_TABLE;
+                System.out.println(getTableNumberFromOrder());
             }
         }
     }

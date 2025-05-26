@@ -12,7 +12,7 @@ public class Table {
     private final int number;
     private ArrayList<WaiterListener> waiterSubscribers;
     private Menu menu;
-    private int guestAmount = 3;
+    private int guestAmount;
     ArrayList<String> foodToEat;
     private boolean busy = false;
     private ArrayList<StewardListener> stewardSubscribers = new ArrayList<>();
@@ -90,6 +90,7 @@ public class Table {
         if (!isBusy()){
             for (Guest guest: this.guests){
                 guest.setSeat(placesToSit.get(guest.getNumber()).get(0), placesToSit.get(guest.getNumber()).get(1));
+                guestAmount++;
             }
         }
     }
@@ -114,6 +115,15 @@ public class Table {
 
     public void setFoodToEat(ArrayList<String> array){
         foodToEat.addAll(array);
+        giveFoodToGuests();
+
+
+    }
+
+    private void giveFoodToGuests(){
+        for (Guest guest: guests){
+            guest.receiveFood(foodToEat.get(guest.getNumber()));
+        }
     }
 
     public ArrayList<ArrayList<Integer>> getPlacesToSit() {
@@ -126,9 +136,17 @@ public class Table {
         busy = true;
     }
 
-    public void updateGuests(){
-        for (Guest guest: guests){
+    public void updateGuests() {
+        boolean clear = false;
+        for (Guest guest : guests) {
             guest.update();
+            if (guest.isDone()){
+                clear = true;
+            }
+        }
+        if (clear){
+            guests.clear();
+            busy = false;
         }
     }
 

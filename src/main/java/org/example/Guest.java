@@ -34,13 +34,14 @@ public class Guest extends Walker {
     public void eat(){
         if (isEating()){
             if (!(food == null)) {
-                startTimer(10000, "");
+                startTimer(10000, "eating");
                 long thisTime = System.currentTimeMillis();
                 if ((thisTime - lastTime) >= period) {
                     food = null;
                     state = States.IDLE;
                     startCounting = true;
                     mealsEaten ++;
+                    System.out.println("Has eaten");
                     if (isDone()){
 
                         walkOut();
@@ -83,7 +84,7 @@ public class Guest extends Walker {
 
     public boolean isEating(){ return state == States.EATING;}
 
-    private boolean isDone(){return mealsEaten == 3;}
+    public boolean isDone(){return mealsEaten == 3;}
 
     @Override
     public int getX() {
@@ -108,5 +109,8 @@ public class Guest extends Walker {
         return number;
     }
 
+    public void setEating(){
+        state = States.EATING;
+    }
 
 }
