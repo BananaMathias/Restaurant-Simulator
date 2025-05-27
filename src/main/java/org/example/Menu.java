@@ -3,6 +3,10 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Singleton
+ * The menu that the restaurant has
+ */
 public class Menu {
 
     private static Menu menuInstance = null;
@@ -11,6 +15,10 @@ public class Menu {
     private ArrayList<String> desserts;
     private HashMap<Integer, ArrayList<String>> menuItems;
 
+    /**
+     * Constructor
+     * Adds the different foods to the final HashMap
+     */
     private Menu(){
 
         this.appetizers = new ArrayList<>();
@@ -34,7 +42,11 @@ public class Menu {
         this.menuItems.put(3, this.desserts);
     }
 
-
+    /**
+     * Creates menu object
+     * If a menu already exists it returns that one instead of creating a new one
+     * @return new menu object or the already created one
+     */
     public static Menu getInstance(){
         if (menuInstance == null){
             menuInstance = new Menu();
@@ -45,8 +57,6 @@ public class Menu {
     public HashMap<Integer, ArrayList<String>> getMenuItems() {
         return menuItems;
     }
-
-    // REMOVE SINGLETON
 }
 
 

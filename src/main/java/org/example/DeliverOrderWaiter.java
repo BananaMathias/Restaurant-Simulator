@@ -3,9 +3,19 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Creates a waiter with the purpose of delivering completed orders to the tables
+ */
 public class DeliverOrderWaiter extends MasterWaiter {
     private ArrayList<Table> tables;
 
+    /**
+     * Constructor
+     * @param x the waiter's x-position
+     * @param y the waiter's y-position
+     * @param tables ArrayList<Table></Table> of the existing tables
+     * @param masterChef Reference to the masterChef
+     */
     public DeliverOrderWaiter(int x, int y, ArrayList<Table> tables, MasterChef masterChef) {
         super(x, y, masterChef);
         this.tables = tables;
@@ -13,40 +23,54 @@ public class DeliverOrderWaiter extends MasterWaiter {
         this.homeY = y;
     }
 
+    /**
+     * Gets the x and y position of the table its going to
+     */
     protected void waiterSpecificTask() {
-        //Give table its order
         if (isIdle()) {
             targetX = tables.get(getTableNumberFromOrder()).getX();
             targetY = tables.get(getTableNumberFromOrder()).getY();
         }
     }
 
-    private ArrayList<String> chooseOrderFromOrders() {
-        //orderFromTable.remove(key);
-
+    /**
+     * Gets the array containing the completed orders
+     * @return ArrayList<String></String> order array
+     */
+    private ArrayList<String> chooseOrderFromOrdersArray() {
         return orderFromTable.get(getTableNumberFromOrder());
 
     }
 
+    /**
+     * Gets the targeted table's number
+     * @return int The number
+     */
     private int getTableNumberFromOrder(){
         Object objectKey = orderFromTable.keySet().toArray()[0];
         return (Integer) objectKey;
     }
 
+    /**
+     * Gets a HashMap from the masterChef containing table's number as key and completed order array as item
+     */
     private void getOrderFromMaster(){
         orderFromTable = masterChef.giveOrderToWaiter();
-        toString(chooseOrderFromOrders());
 
     }
 
+    /**
+     * Gives the table its food
+     */
     private void giveTableOrder(){
-        tables.get(getTableNumberFromOrder()).setFoodToEat(chooseOrderFromOrders());
-        //toString(tables.get(getTableNumberFromOrder()).foodToEat);
+        tables.get(getTableNumberFromOrder()).setFoodToEat(chooseOrderFromOrdersArray());
         orderFromTable.clear();
 
     }
 
-
+    /**
+     * Walks to the table and gives the food
+     */
     @Override
     protected void walkToTable() {
         // If everything has gone correctly this should always be true, just a failsafe
@@ -70,6 +94,9 @@ public class DeliverOrderWaiter extends MasterWaiter {
         }
     }
 
+    /**
+     * Checks if the masterChef has a completed order it can give
+     */
     private void checkMasterChef() {
         if (isIdle()) {
             if (!masterChef.getOrdersToBeDelivered().isEmpty()) {
@@ -81,6 +108,9 @@ public class DeliverOrderWaiter extends MasterWaiter {
         }
     }
 
+    /**
+     * Updates the waiter in main
+     */
     @Override
     public void update(){
                 switch (state){
@@ -91,13 +121,15 @@ public class DeliverOrderWaiter extends MasterWaiter {
                     case GOING_HOME:
                         walkHome();
                         break;
-                    // If the state is IDLE:
                     case IDLE:
                         checkMasterChef();
                         break;
                 }
     }
 
+    /**
+     * Walks to its home station from the tables
+     */
     @Override
     protected void walkHome(){
         // New target is its home
@@ -113,7 +145,6 @@ public class DeliverOrderWaiter extends MasterWaiter {
                 }
             }
         }
-
     }
 
 

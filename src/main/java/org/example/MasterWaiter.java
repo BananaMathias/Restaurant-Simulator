@@ -3,6 +3,11 @@ package org.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Abstract
+ * MasterWaiter that the different waiters inherits
+ * Extends Walker
+ */
 public abstract class MasterWaiter extends Walker {
 
     protected int diameter = 50;
@@ -13,6 +18,12 @@ public abstract class MasterWaiter extends Walker {
     protected int homeX;
     protected int homeY;
 
+    /**
+     * Constructor
+     * @param x Waiter's x-position
+     * @param y Waiter's y-position
+     * @param masterChef Reference to the masterChef
+     */
     public MasterWaiter(int x, int y, MasterChef masterChef){
         super(x, y);
         this.masterChef = masterChef;
@@ -21,18 +32,10 @@ public abstract class MasterWaiter extends Walker {
 
     protected abstract void waiterSpecificTask();
 
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
-    public int getDiameter() {
-        return this.diameter;
-    }
-
+    /**
+     * Gets a waiter to walk to the specified table
+     * Designed for getOrderWaiters
+     */
     protected void walkToTable(){
         // If everything has gone correctly this should always be true, just a failsafe
         if (isGoingToTable()){
@@ -55,6 +58,9 @@ public abstract class MasterWaiter extends Walker {
         }
     }
 
+    /**
+     * Updates the waiters in main
+     */
     public void update(){
         // Runs the different walk methods depending on which state GetOrderWaiter has
         switch (state){
@@ -72,6 +78,10 @@ public abstract class MasterWaiter extends Walker {
 
     }
 
+    /**
+     * Makes the waiters walk home
+     * Designed for getOrderWaiters
+     */
     protected void walkHome(){
         // New target is its home
         targetX = this.homeX;
@@ -105,6 +115,10 @@ public abstract class MasterWaiter extends Walker {
         return (state == States.GOING_HOME);
     }
 
+    /**
+     * Prints out a provided ArrayList<String></String>
+     * @param a Provided ArrayList<String></String>
+     */
     public void toString(ArrayList<String> a) {
         System.out.print("[");
         for (String element : a) {

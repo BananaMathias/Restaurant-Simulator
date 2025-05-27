@@ -2,6 +2,9 @@ package org.example;
 
 import java.awt.*;
 
+/**
+ * The sousChef that cooks the main courses
+ */
 public class SousChef extends Chef{
 
     public SousChef(int x, int y){

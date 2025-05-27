@@ -34,30 +34,39 @@ public class RestaurantMain extends JPanel {
         }
         //tables.add(new Table(1000,500,50,1));
 
+        // Creates the chefs
         gardeMangerChef = new GardeMangerChef(300, 75);
         sousChef = new SousChef(125, 375);
         patissierChef = new PatissierChef(400, 500);
         prepChef = new PrepChef(50, 50, gardeMangerChef, sousChef, patissierChef);
-
         masterChef = MasterChef.getInstance(450, 300, 40, menu, gardeMangerChef, sousChef, patissierChef);
+
+        // Creates waiters
         getOrderWaiter = new GetOrderWaiter(507,280, masterChef);
         deliverOrderWaiter = new DeliverOrderWaiter(507, 320, tables, masterChef);
+
+        // Creates Steward
         steward = new Steward(1070,400,tables);
 
+        // Adds Chefs to chefs ArrayList
         chefs.add(gardeMangerChef);
         chefs.add(sousChef);
         chefs.add(patissierChef);
 
+        // Subscribes masterChef and prepChef to chefs
         for (Chef c: chefs){
             c.masterSubscribe(masterChef);
             c.prepSubscribe(prepChef);
 
         }
+
+        // Subscribes getOrderWaiter and steward to tables
         for (Table t: tables) {
             t.waiterSubscribe((WaiterListener) getOrderWaiter);
             t.stewardSubscribe(steward);
         }
 
+        // Adds waiters to ArrayList
         waiters.add(getOrderWaiter);
         waiters.add(deliverOrderWaiter);
     }
@@ -67,17 +76,15 @@ public class RestaurantMain extends JPanel {
     // Contains the simulation logic, should probably be broken into smaller pieces as the program expands
     static void update() {
 
-        prepChef.update();
-        // what should happen with the waiter each time the simulation loops
-        // Runs update() to run the correct walk method in GetOrderWaiter
-        getOrderWaiter.update();
-        deliverOrderWaiter.update();
+        // Updates the different restaurant components
+
         // If the GetOrderWaiter is IDLE
         if (getOrderWaiter.isIdle()){
 
             // Gets random table to go to
             Random randomTable = new Random();
             int tableNumber = randomTable.nextInt(6);
+            // If the table has guests:
             if (tables.get(tableNumber).isBusy()) {
                 // If the GetOrderWaiter has not gone to any table
                 if (totalVisits == 0) {
@@ -90,7 +97,7 @@ public class RestaurantMain extends JPanel {
 
                 }
             }
-
+            // If the table does not have guests:
             else  if(!tables.get(tableNumber).isBusy()){
                 // Steward should give new guests
                 tables.get(tableNumber).needGuests();
@@ -98,10 +105,16 @@ public class RestaurantMain extends JPanel {
             }
         }
 
+        // Updates the different restaurant components
+        prepChef.update();
+
+        for (MasterWaiter waiter: waiters){
+            waiter.update();
+        }
+
         for (Table t : tables) {
             t.updateGuests();
         }
-        // ... similar updates for all other agents in the simulation.
 
         for (Chef chef : chefs) {
             chef.update();
@@ -111,7 +124,7 @@ public class RestaurantMain extends JPanel {
 
 
     static void randomOrder(int tableNumber){
-        // Adds a visit to log amount of visits Waiters has done to a specific table
+        // Adds a visit array to log amount of visits Waiter has done to a specific table
         visits[tableNumber]++;
         totalVisits++;
         // Runs the correct table's order()
@@ -255,14 +268,6 @@ public class RestaurantMain extends JPanel {
 
             panel.repaint();
         }
-    }
-
-    public static void toString(ArrayList<String> a) {
-        System.out.print("[");
-        for (String element : a) {
-            System.out.print(element + ", ");
-        }
-        System.out.print("]");
     }
 
 }

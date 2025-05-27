@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Singleton
+ * Creates the masterChef
+ * Listener on the other chefs
+ */
 public class MasterChef implements ChefListener {
 
     private static MasterChef masterChefInstance = null;
@@ -15,13 +20,22 @@ public class MasterChef implements ChefListener {
     private Menu menu;
     private HashMap<Integer, ArrayList<String>> ordersFromTables;
     private HashMap<Integer, ArrayList<String>> ordersToBeDelivered;
-    private Cooking gardeMangerChef;
-    private Cooking sousChef;
-    private Cooking patissierChef;
+    private Chef gardeMangerChef;
+    private Chef sousChef;
+    private Chef patissierChef;
     private enum States {IS_BUSY, IDLE}
     private States state = States.IDLE;
 
-
+    /**
+     * Constructor
+     * @param x The masterChef's x-position
+     * @param y The masterChef's y-position
+     * @param diameter Tts diameter
+     * @param menu A reference to the menu in the restaurant
+     * @param gardeMangerChef A reference to the gardeMangerChef
+     * @param sousChef A reference to the sousChef
+     * @param patissierChef A reference to the patissierChef
+     */
     private MasterChef(int x, int y, int diameter, Menu menu, Chef gardeMangerChef, Chef sousChef, Chef patissierChef){
         this.x = x;
         this.y = y;
@@ -34,6 +48,17 @@ public class MasterChef implements ChefListener {
         ordersToBeDelivered = new HashMap<>();
     }
 
+    /**
+     * Creates the masterChef. Returns the already created masterChef if more than one masterChef is attemped to be created
+     * @param x The masterChef's x-position
+     * @param y The masterChef's y-position
+     * @param diameter int masterChef's diameter
+     * @param menu A reference to the menu in the restaurant
+     * @param gardeMangerChef A reference to the gardeMangerChef
+     * @param sousChef A reference to the sousChef
+     * @param patissierChef A reference to the patissierChef
+     * @return masterChef object, if one has already been created it returns that one
+     */
     public static MasterChef getInstance(int x, int y, int diameter, Menu menu, Chef gardeMangerChef, Chef sousChef, Chef patissierChef) {
         if (masterChefInstance == null) {
             masterChefInstance = new MasterChef(x, y, diameter, menu, gardeMangerChef, sousChef, patissierChef);
@@ -52,26 +77,43 @@ public class MasterChef implements ChefListener {
         return this.diameter;
     }
     // Takes order and puts in order list
+
+    /**
+     * Takes the order provided from getOrderWaiter
+     * @param orderFromTable HashMap<Integer, ArrayList<String></String>> containing table number as a key and an array with food orders from the table
+     */
     public void takeOrderFromWaiter(HashMap<Integer, ArrayList<String>> orderFromTable){
         ordersFromTables.putAll(orderFromTable);
     }
 
+    /**
+     * Takes the completed order from a chef
+     * @param completedOrders HashMap<Integer, ArrayList<String></String>> containing the table number as a key and an array with completed food orders from a table
+     */
     public void takeOrderFromChef(HashMap<Integer, ArrayList<String>> completedOrders){
         ordersToBeDelivered.putAll(completedOrders);
 
     }
 
+    /**
+     * Gives the completed order from a chef to the DeliverOrderWaiter
+     * @return HashMap<Integer, ArrayList<String></String>> containing the table number as a key and an array with completed food orders from the table
+     */
     public HashMap<Integer, ArrayList<String>> giveOrderToWaiter(){
-
         return chooseCompletedOrder();
     }
 
+    /**
+     * Strategy pattern
+     * If the ordersFromTables is not empty, the masterChef chooses chef strategy based on which key the food to be cooked fits in the menu
+     * Runs the startCooking method on the chosen chef
+     */
     private void distributeOrder(){
         if (ordersFromTables.isEmpty()){
             return;
         }
 
-        Cooking chef = null;
+        Chef chef = null;
 
         HashMap<Integer, ArrayList<String>> order = chooseOrderFromOrders();
         ArrayList<String> orderArray = getOrderArray(order);
@@ -93,7 +135,11 @@ public class MasterChef implements ChefListener {
         chef.startCooking(order);
 
     }
-    // I NEED THE ARRAY NOT HASH MAP BUT I STILL NEED THE HASHMAP TO PARSE TO THE CHEF, MIGHT BE ABLE TO USE ORDERSFROMTABLES TO FIND RIGHT ORDER BUT STILL NEED TO GET THE KEY OUT LIKE GARDERMANGERCHEF
+
+    /**
+     * Chooses a single order from the orders it has collected from the getOrderWaiter
+     * @return HashMap<Integer, ArrayList<String></String>> with a single order and table number as a key
+     */
     private HashMap<Integer, ArrayList<String>> chooseOrderFromOrders(){
         Object objectKey = ordersFromTables.keySet().toArray()[0];
         Integer key = (Integer) objectKey;
@@ -106,6 +152,10 @@ public class MasterChef implements ChefListener {
 
     }
 
+    /**
+     * Chooses a single order from the completed orders it has collected from the chefs
+     * @return HashMap<Integer, ArrayList<String></String>> with a completed order and table number as a key
+     */
     private HashMap<Integer, ArrayList<String>> chooseCompletedOrder(){
         Object objectKey = ordersToBeDelivered.keySet().toArray()[0];
         Integer key = (Integer) objectKey;
@@ -119,7 +169,11 @@ public class MasterChef implements ChefListener {
     }
 
 
-
+    /**
+     * Gets the ArrayList<String></String> item from a provided HashMap with an unknown key
+     * @param orderHashmap HashMap<Integer, ArrayList<String></String>> with an unknown key
+     * @return ArrayList<String></String> Order
+     */
     private ArrayList<String> getOrderArray(HashMap<Integer, ArrayList<String>> orderHashmap) {
         Object objectKey = orderHashmap.keySet().toArray()[0];
         Integer key = (Integer) objectKey;
@@ -128,6 +182,9 @@ public class MasterChef implements ChefListener {
         return order;
     }
 
+    /**
+     * Chefs notify the masterChef that they need an order
+     */
     @Override
     public void notifyListener() {
         if (isIdle()){
@@ -146,7 +203,10 @@ public class MasterChef implements ChefListener {
 
     public void setIdle(){state = States.IDLE;}
 
-
+    /**
+     * Prints out a provided ArrayList<String></String>
+     * @param a ArrayList<String></String>
+     */
     public void toString(ArrayList<String> a) {
         System.out.print("[");
         for (String element : a) {

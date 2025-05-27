@@ -5,6 +5,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The garde manger chef that cooks the appetizers
+ */
 public class GardeMangerChef extends Chef{
 
     public GardeMangerChef(int x, int y){

@@ -2,6 +2,10 @@ package org.example;
 
 import java.util.ArrayList;
 
+/**
+ * Abstract
+ * The class that all classes that are supposed to walk inherits to be able to walk and stand still when needed
+ */
 public abstract class Walker {
 
     protected static long period; //one lap
@@ -14,12 +18,22 @@ public abstract class Walker {
     protected int targetY;
     protected int diameter = 50;
 
+    /**
+     * Constructor
+     * @param x The Walker's x-position
+     * @param y The Walker's y-position
+     */
     public Walker(int x, int y) {
         this.x = x;
         this.y = y;
 
     }
 
+    /**
+     * Adds or removes from the Walker's x and y position so that they walk towards the target
+     * Checks if the Walker has arrived and returns true if that is the case
+     * @return true if the Walker has reached its destination
+     */
     protected boolean goTo() {
         boolean xArrived = false;
         boolean yArrived = false;
@@ -57,6 +71,11 @@ public abstract class Walker {
         return xArrived && yArrived;
     }
 
+    /**
+     * Starts a timer if the Walker can start a timer
+     * @param newPeriod int The time its supposed to wait
+     * @param action String Message the Walker prints out when the timer starts
+     */
     protected void startTimer(int newPeriod, String action) {
         // If the Walker has its startCounting set as true
         if (startCounting) {
@@ -81,14 +100,4 @@ public abstract class Walker {
     public int getDiameter() {
         return this.diameter;
     }
-
-
-    public void toString(ArrayList<String> a) {
-        System.out.print("[");
-        for (String element : a) {
-            System.out.print(element + ", ");
-        }
-        System.out.print("]");
-    }
-
 }

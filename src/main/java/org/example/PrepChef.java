@@ -3,6 +3,11 @@ package org.example;
 import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 
+/**
+ * Creates the prepChef that gives the ingredients to the chefs
+ * Listener on the chefs
+ * Extends walker
+ */
 public class PrepChef extends Walker implements PrepChefListener{
 
     protected enum States {IDLE, GOING_TO_CHEF, GOING_HOME}
@@ -15,6 +20,14 @@ public class PrepChef extends Walker implements PrepChefListener{
     private Chef patissierChef;
     private String goToChef;
 
+    /**
+     * Constructor
+     * @param x The prepChef's x-position
+     * @param y The prepChef's y-position
+     * @param gardeMangerChef Reference to the gardeMangerChef
+     * @param sousChef Reference to the sousChef
+     * @param patissierChef Reference to the patissierChef
+     */
     public PrepChef(int x, int y, Chef gardeMangerChef, Chef sousChef, Chef patissierChef){
         super(x, y);
         this.color = Color.ORANGE;
@@ -26,6 +39,12 @@ public class PrepChef extends Walker implements PrepChefListener{
         this.patissierChef = patissierChef;
     }
 
+    /**
+     * Gets notified by the chefs if they are low on ingredients
+     * @param x the Chef's x-position
+     * @param y the Chef's y-position
+     * @param chef String which chef it is going to
+     */
     public void notifyListener(int x, int y, String chef) {
         if (isIdle()){
             goToChef = chef;
@@ -36,6 +55,9 @@ public class PrepChef extends Walker implements PrepChefListener{
         }
     }
 
+    /**
+     * Walks to the chef who notified the prepChef and gives the ingredients to the chef
+     */
     private void walkToChef(){
         if (isGoingToChef()){
             if (goTo()){
@@ -61,6 +83,9 @@ public class PrepChef extends Walker implements PrepChefListener{
         }
     }
 
+    /**
+     * Walks to the home station
+     */
     private void walkHome(){
         if (isGoingHome()){
             if (goTo()){
@@ -69,6 +94,9 @@ public class PrepChef extends Walker implements PrepChefListener{
         }
     }
 
+    /**
+     * Updates the prepChef in main
+     */
     public void update(){
         switch (state){
             case GOING_TO_CHEF:
