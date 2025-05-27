@@ -47,7 +47,7 @@ public class PrepChef extends Walker implements PrepChefListener{
      */
     public void notifyListener(int x, int y, String chef) {
         if (isIdle()){
-            goToChef = chef;
+            goToChef = chef; // Sets which chef it should go to
             this.targetX = x;
             this.targetY = y;
             this.state = States.GOING_TO_CHEF;
@@ -62,6 +62,7 @@ public class PrepChef extends Walker implements PrepChefListener{
         if (isGoingToChef()){
             if (goTo()){
 
+                // The chef that notified put its name into goToChef which can then be used to go to the correct chef
                 switch (goToChef){
                     case "gardeMangerChef":
                         gardeMangerChef.addIngredients(20);

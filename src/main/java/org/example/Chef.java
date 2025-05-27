@@ -79,11 +79,11 @@ public abstract class Chef extends Walker{
      */
     protected ArrayList<String> getOrderArray(){
 
-        String objectKey = Arrays.toString(ordersToComplete.keySet().toArray());
-        String key = String.valueOf(objectKey.toCharArray()[1]);
+        String objectKey = Arrays.toString(ordersToComplete.keySet().toArray()); // String with brackets included
+        String key = String.valueOf(objectKey.toCharArray()[1]); // Removes brackets
 
-        char keyChar = key.toCharArray()[0];
-        Integer keyInt = Integer.valueOf(String.valueOf(keyChar));
+        char keyChar = key.toCharArray()[0]; // Gets the number alone
+        Integer keyInt = Integer.valueOf(String.valueOf(keyChar)); // Makes the number into an integer
         ArrayList<String> order = ordersToComplete.get(keyInt);
         order.add(0, keyInt.toString()); // Adds the table number to the beginning of the array
         return order;

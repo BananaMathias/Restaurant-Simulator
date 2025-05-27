@@ -76,7 +76,7 @@ public abstract class Walker {
      * @param newPeriod int The time its supposed to wait
      * @param action String Message the Walker prints out when the timer starts
      */
-    protected void startTimer(int newPeriod, String action) {
+    protected boolean startTimer(int newPeriod, String action) {
         // If the Walker has its startCounting set as true
         if (startCounting) {
             // Sets the time that should be compared to in Walkers timer
@@ -86,7 +86,12 @@ public abstract class Walker {
             // Sets startCounting to false so that this method only runs once by itself
             startCounting = false;
             System.out.println(action);
+            return true;
         }
+        else{
+            return true;
+        }
+
     }
 
     public int getX() {

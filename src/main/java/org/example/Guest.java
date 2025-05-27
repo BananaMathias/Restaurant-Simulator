@@ -55,14 +55,14 @@ public class Guest extends Walker {
      */
     public void eat(){
         if (isEating()){
-            if (!(food == null)) {
+            if (!(food == null)) { // If it has food:
                 startTimer(10000, "eating");
                 long thisTime = System.currentTimeMillis();
-                if ((thisTime - lastTime) >= period) {
+                if ((thisTime - lastTime) >= period) { // When the guest has eaten for 10 seconds
                     food = null;
                     state = States.IDLE;
                     startCounting = true;
-                    mealsEaten ++;
+                    mealsEaten ++; // 1 more meal has been eaten
                     System.out.println("Has eaten");
                 }
             }

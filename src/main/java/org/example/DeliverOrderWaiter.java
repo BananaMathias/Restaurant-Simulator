@@ -56,7 +56,6 @@ public class DeliverOrderWaiter extends MasterWaiter {
      */
     private void getOrderFromMaster(){
         orderFromTable = masterChef.giveOrderToWaiter();
-
     }
 
     /**
@@ -99,11 +98,10 @@ public class DeliverOrderWaiter extends MasterWaiter {
      */
     private void checkMasterChef() {
         if (isIdle()) {
-            if (!masterChef.getOrdersToBeDelivered().isEmpty()) {
-                getOrderFromMaster();
-                waiterSpecificTask();
+            if (!masterChef.getOrdersToBeDelivered().isEmpty()) { // if masterChef has a completed order
+                getOrderFromMaster(); // Takes an order
+                waiterSpecificTask(); // Gets the table x and y coordinates
                 state = States.GOING_TO_TABLE;
-                System.out.println(getTableNumberFromOrder());
             }
         }
     }

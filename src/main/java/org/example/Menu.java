@@ -6,6 +6,8 @@ import java.util.HashMap;
 /**
  * Singleton
  * The menu that the restaurant has
+ * Consists of 3 items. The different keys refers to different food types
+ * These food types corresponds to different chefs
  */
 public class Menu {
 

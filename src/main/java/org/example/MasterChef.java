@@ -109,15 +109,18 @@ public class MasterChef implements ChefListener {
      * Runs the startCooking method on the chosen chef
      */
     private void distributeOrder(){
+        // If it does not have an order to give:
         if (ordersFromTables.isEmpty()){
             return;
         }
-
+        // Chef strategy
         Chef chef = null;
 
         HashMap<Integer, ArrayList<String>> order = chooseOrderFromOrders();
         ArrayList<String> orderArray = getOrderArray(order);
 
+        // If one meal in the order is in the menu item then the whole order is that type of food
+        // In that case you can assign the correct chef based on what is in the order
         if (menu.getMenuItems().get(1).contains(orderArray.get(0))){
             chef = this.gardeMangerChef;
             System.out.println("I need the garde manger chef");
@@ -131,7 +134,7 @@ public class MasterChef implements ChefListener {
             System.out.println("I need the patissier chef");
         }
 
-        state = States.IS_BUSY;
+        state = States.IS_BUSY; // masterChef is busy so that it does not give out more orders
         chef.startCooking(order);
 
     }

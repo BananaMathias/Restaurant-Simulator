@@ -112,7 +112,7 @@ public class Table {
         ArrayList<String> foodOrders = new ArrayList<>();
         for (int i = 0; i < guestAmount; i++) {
             int foodInt = foodRandom.nextInt(2);
-            foodOrders.add(this.menu.getMenuItems().get(orderAmount).get(foodInt));
+            foodOrders.add(this.menu.getMenuItems().get(orderAmount).get(foodInt)); // Random food from the correct food type
         }
         return foodOrders;
     }

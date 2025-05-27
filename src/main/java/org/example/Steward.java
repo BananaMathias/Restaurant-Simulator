@@ -49,13 +49,14 @@ public class Steward implements StewardListener {
      * @param tableNumber int The assigned table's number
      */
     private void createGuests(int tableNumber){
+        // If the table is not busy it can create guests
         if (!tables.get(tableNumber).isBusy()){
             Random random = new Random();
-            int randomInt = random.nextInt(4) + 1;
+            int randomInt = random.nextInt(4) + 1; // Random amount of guests between 1 - 4
 
             ArrayList<Guest> guests = new ArrayList<>();
             for (int i = 0; i < randomInt; i++){
-                guests.add(new Guest(900 + (i * 50),350, i));
+                guests.add(new Guest(900 + (i * 50),350, i)); // Places them with a 50 pixel gap between each other
             }
 
             tables.get(tableNumber).setGuests(guests);
