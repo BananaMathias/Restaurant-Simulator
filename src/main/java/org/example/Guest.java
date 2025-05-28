@@ -9,7 +9,7 @@ import java.awt.*;
 public class Guest extends Walker {
 
     private int number;
-    private enum States {IDLE, GOING_TO_TABLE, LEAVING, EATING}
+    private enum States {IDLE, GOING_TO_TABLE, EATING}
     private States state = States.IDLE;
     private String food = null;
     private int mealsEaten = 0;

@@ -18,7 +18,7 @@ public class AppTest {
     }
 
     @Test
-    void goToTest1(){
+    void testGoToNormally(){
         // Try if the function works
         while (true) {
             try {
@@ -38,7 +38,7 @@ public class AppTest {
     }
 
     @Test
-    void goToTest2(){
+    void testGoToNegative(){
         // Test if negative values works
         while (true) {
             try {
@@ -58,7 +58,7 @@ public class AppTest {
     }
 
     @Test
-    void goToTest3(){
+    void testGoToStandStill(){
         // Try if it works if you go to where you already are
         while (true) {
             try {
@@ -78,7 +78,7 @@ public class AppTest {
     }
 
     @Test
-    void goToTest4(){
+    void testGoToNotSameValues(){
         // Test if it works when it stop in y position before x
         while (true) {
             gardemangerChef.targetX = 200;
@@ -93,7 +93,7 @@ public class AppTest {
     }
 
     @Test
-    void startCountingTest1(){
+    void timerNormallyAndFalse(){
        // Test how the function is supposed to be used
         gardemangerChef.startCounting = true;
         while (true) {
@@ -114,7 +114,7 @@ public class AppTest {
     }
 
     @Test
-    void startCountingTest2() {
+    void testNegativePeriod() {
         // Tests if it works when period is negative, It should not
         while (true) {
 
