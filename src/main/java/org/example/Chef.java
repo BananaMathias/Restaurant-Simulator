@@ -237,6 +237,7 @@ public abstract class Chef extends Walker{
                 for (ChefListener masterChef: masterSubscribers){
                     masterChef.takeOrderFromChef(completedOrders);
                 }
+                completedOrders.clear(); // Clears the order so that a new order can be taken and delivered
                 state = States.GOING_HOME;
             }
         }
