@@ -89,7 +89,7 @@ public abstract class Walker {
             return true;
         }
         else{
-            return true;
+            return false;
         }
 
     }

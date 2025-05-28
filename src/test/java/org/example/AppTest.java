@@ -16,9 +16,10 @@ public class AppTest {
     void setup(){
         gardemangerChef = new GardeMangerChef(0,0);
     }
-    // Try if it works
+
     @Test
     void goToTest1(){
+        // Try if the function works
         while (true) {
             try {
                 Thread.sleep(33); // With the goal of having about 30 fps.
@@ -29,14 +30,16 @@ public class AppTest {
             gardemangerChef.targetY = 100;
 
             if (gardemangerChef.goTo()){
-                System.out.println("Passed 1");
+                assertEquals(100, gardemangerChef.getX());
+                assertEquals(100, gardemangerChef.getY());
                 break;
             }
         }
     }
-    // Test if negative values works
+
     @Test
     void goToTest2(){
+        // Test if negative values works
         while (true) {
             try {
                 Thread.sleep(33); // With the goal of having about 30 fps.
@@ -47,14 +50,16 @@ public class AppTest {
             gardemangerChef.targetY = -100;
 
             if (gardemangerChef.goTo()){
-                System.out.println("Passed 2");
+                assertEquals(-100, gardemangerChef.getX());
+                assertEquals(-100, gardemangerChef.getY());
                 break;
             }
         }
     }
-    // Try if it works if you go to where you already are
+
     @Test
     void goToTest3(){
+        // Try if it works if you go to where you already are
         while (true) {
             try {
                 Thread.sleep(33);
@@ -65,20 +70,23 @@ public class AppTest {
             gardemangerChef.targetY = 0;
 
             if (gardemangerChef.goTo()){
-                System.out.println("Passed 3");
+                assertEquals(0, gardemangerChef.getX());
+                assertEquals(0, gardemangerChef.getY());
                 break;
             }
         }
     }
-    // Test if it works when it stop in y position before x
+
     @Test
     void goToTest4(){
+        // Test if it works when it stop in y position before x
         while (true) {
             gardemangerChef.targetX = 200;
             gardemangerChef.targetY = 143;
 
             if (gardemangerChef.goTo()){
-                System.out.println("Passed 4");
+                assertEquals(200, gardemangerChef.getX());
+                assertEquals(143,gardemangerChef.getY());
                 break;
             }
         }
@@ -86,18 +94,28 @@ public class AppTest {
 
     @Test
     void startCountingTest1(){
-        // Tests the method used normally
+       // Test how the function is supposed to be used
         gardemangerChef.startCounting = true;
-        gardemangerChef.startTimer(1000, "");
+        while (true) {
+
+            gardemangerChef.startTimer(1000, "");
+            assertFalse(gardemangerChef.startCounting);
+            long thisTime = System.currentTimeMillis();
+            long timeGone = (thisTime - gardemangerChef.lastTime);
+            if (timeGone >= gardemangerChef.period) {
+                assertEquals(1000, timeGone);
+                break;
+            }
+        }
 
         // Tests if it works when startCounting is false
         gardemangerChef.startCounting = false;
-        assertFalse(gardemangerChef.startTimer(100, "passed")); // If this prints out passed it passed
+        assertFalse(gardemangerChef.startTimer(100, ""));
     }
 
     @Test
     void startCountingTest2() {
-        // Tests if it works when period is negative
+        // Tests if it works when period is negative, It should not
         while (true) {
 
             try{
@@ -107,12 +125,13 @@ public class AppTest {
             }
 
             gardemangerChef.startCounting = false;
-            gardemangerChef.startTimer(100, "passed"); // If this prints out passed it passed
+            gardemangerChef.startTimer(-100, "");
             long thisTime = System.currentTimeMillis();
-            if ((thisTime - gardemangerChef.lastTime) >= gardemangerChef.period) {
-                assertFalse(gardemangerChef.startCounting);
+            long timeGone = (thisTime - gardemangerChef.lastTime);
+            if (timeGone >= gardemangerChef.period) {
+                assertNotEquals(-100, timeGone);
                 break;
-                }
+            }
         }
     }
 }
